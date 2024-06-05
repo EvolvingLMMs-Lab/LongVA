@@ -4,7 +4,7 @@ train.py \
 --batch-size 1 \
 --gradient-accumulate-every 4  \
 --seed 2024 \
---output-dir  ./output/vicuna-7b-v1.5-extend \
+--output-dir  ./output/Yi-1.5-9B-Chat-16K-extend \
 --wandb LMExtend \
 --max-train-steps 2000  \
 --learning-rate 1e-5  \
