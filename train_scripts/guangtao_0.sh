@@ -13,4 +13,4 @@ train.py \
 --seq-length 256000 \
 --rope-theta 1000000000 \
 --parallel_mode zigzag_ring_attn \
---checkpointing-steps 2
+--checkpointing-steps 200
