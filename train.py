@@ -84,7 +84,7 @@ def main(args):
         shuffle=True,
         batch_size=args.batch_size,
     )
-    if args.learning_rate != 2e-5:
+    if args.learning_rate != 1e-5:
         accelerator.print(f"Warning: You also need to modify accelerate_configs/zero3_offload.json to change the learning rate")
     optim = DummyOptim(model.parameters(), lr=args.learning_rate)
     scheduler = DummyScheduler(
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     args.add_argument("--wandb", type=str)
     args.add_argument("--seed", type=int, default=42)
     args.add_argument("--max-train-steps", type=int, default=400)
-    args.add_argument("--learning-rate", type=float, default=2e-5)
+    args.add_argument("--learning-rate", type=float, default=1e-5)
     args.add_argument("--rope-theta", type=float, default=100000)
     args.add_argument("--model", type=str, default="meta-llama/Llama-2-7b-hf")
     args.add_argument(
