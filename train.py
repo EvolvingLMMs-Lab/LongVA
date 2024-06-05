@@ -163,7 +163,19 @@ def main(args):
             if loss_log is not None:
                 progress_bar.set_postfix(loss_log)
             completed_steps += 1
-
+            if isinstance(args.checkpointing_steps, int) and completed_steps > 0:
+                if completed_steps % args.checkpointing_steps == 0:
+                    output_dir = f"step_{completed_steps}"
+                    if args.output_dir is not None:
+                        output_dir = os.path.join(args.output_dir, output_dir)
+                        accelerator.wait_for_everyone()
+                        state_dict = accelerator.get_state_dict(model)
+                        accelerator.unwrap_model(model).save_pretrained(
+                            output_dir,
+                            is_main_process=accelerator.is_main_process,
+                            save_function=accelerator.save,
+                            state_dict=state_dict,
+                        )
         if completed_steps >= args.max_train_steps:
             break
 
@@ -195,6 +207,7 @@ if __name__ == "__main__":
     args.add_argument("--wandb", type=str)
     args.add_argument("--seed", type=int, default=42)
     args.add_argument("--max-train-steps", type=int, default=400)
+    args.add_argument("--checkpointing-steps", type=int, default=100)
     args.add_argument("--learning-rate", type=float, default=1e-5)
     args.add_argument("--rope-theta", type=float, default=100000)
     args.add_argument("--model", type=str, default="meta-llama/Llama-2-7b-hf")
