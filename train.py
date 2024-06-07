@@ -63,6 +63,7 @@ def main(args):
             rope_theta=args.rope_theta,
             _attn_implementation="flash_attention_2",
         )
+        assert args.parallel_mode == "zigzag_ring_attn", "Only support zigzag ring attention for Qwen2 model"
     else:
         model = AutoModelForCausalLM.from_pretrained(
             args.model,
