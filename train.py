@@ -9,6 +9,7 @@ from accelerate.utils import InitProcessGroupKwargs, set_seed
 from tqdm import tqdm
 from transformers import set_seed, default_data_collator
 from transformers import AutoModelForCausalLM
+from easy_context import Qwen2ForCausalLM_RingAttn
 import transformers
 from flash_attn.losses.cross_entropy import CrossEntropyLoss
 import math
@@ -54,22 +55,30 @@ def main(args):
         train_dataset = load_from_disk(args.dataset)
     if isinstance(train_dataset, DatasetDict):
         train_dataset = train_dataset["train"]
+    if "Qwen2" in args.model:
+        model = Qwen2ForCausalLM_RingAttn.from_pretrained(
+            args.model,
+            device_map=accelerator.device,
+            torch_dtype=torch.bfloat16,
+            rope_theta=args.rope_theta,
+            _attn_implementation="flash_attention_2",
+        )
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            device_map=accelerator.device,
+            torch_dtype=torch.bfloat16,
+            rope_theta=args.rope_theta,
+            _attn_implementation="flash_attention_2",
+        )
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        device_map=accelerator.device,
-        torch_dtype=torch.bfloat16,
-        rope_theta=args.rope_theta,
-        _attn_implementation="flash_attention_2",
-    )
-
-    assert isinstance(
-        model, (transformers.LlamaForCausalLM, transformers.MistralForCausalLM)
-    ), "Only support llama and mistral model"
-    model_type = (
-        "llama" if isinstance(model, transformers.LlamaForCausalLM) else "mistral"
-    )
-    apply_seq_parallel_monkey_patch(args.parallel_mode, model_type)
+        assert isinstance(
+            model, (transformers.LlamaForCausalLM, transformers.MistralForCausalLM)
+        ), "Only support llama and mistral model"
+        model_type = (
+            "llama" if isinstance(model, transformers.LlamaForCausalLM) else "mistral"
+        )
+        apply_seq_parallel_monkey_patch(args.parallel_mode, model_type)
 
     if "input_ids" not in train_dataset.column_names:
         raise RuntimeError("Dataset must include an `input_ids` feature")

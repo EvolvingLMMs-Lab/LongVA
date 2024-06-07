@@ -6,7 +6,7 @@ from .zigzag_ring_attn.monkey_patch import apply_zigzag_ring_attn_monkey_patch_m
 from .unsloth_offloaded_gradient_checkpoint.monkey_patch import apply_unsloth_offloaded_gradient_checkpoint_monkey_patch
 from .ulysses_attn.prepare_inputs import prepare_ulysses_attn_inputs  
 from .ulysses_attn.monkey_patch import apply_ulysses_attn_monkey_patch_llama 
-
+from .modeling_qwen2 import Qwen2ForCausalLM_RingAttn
 def prepare_seq_parallel_inputs(
     seq_algo, input_ids, position_ids, target_ids, rank, world_size, device
 ):
