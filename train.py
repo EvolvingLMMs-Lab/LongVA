@@ -91,7 +91,7 @@ def main(args):
     train_loader = DataLoader(
         train_dataset,
         collate_fn=default_data_collator,
-        shuffle=True,
+        shuffle=False,
         batch_size=args.batch_size,
     )
     if args.learning_rate != 1e-5:
@@ -123,6 +123,7 @@ def main(args):
             int(training_difference.replace("step_", ""))
         )
         skip = 0
+        # train_loader = accelerator.skip_first_batches(train_loader, resume_step*args.gradient_accumulate_every-1)
         completed_steps += resume_step
         progress_bar.update(resume_step)
         accelerator.print(f"Resuming training from step {resume_step}")
@@ -133,6 +134,7 @@ def main(args):
         if args.resume_from_checkpoint:
             skip += 1
             if skip <= resume_step * args.gradient_accumulate_every:
+                accelerator.print(f"Skipping iter {skip}")
                 continue
         input_ids = batch["input_ids"][..., : args.seq_length + 1][..., :-1]
         target_ids = batch["input_ids"][..., : args.seq_length + 1][..., 1:]
@@ -185,7 +187,6 @@ def main(args):
             optim.step()
             scheduler.step()
             optim.zero_grad()
-
         if accelerator.sync_gradients:
             progress_bar.update(1)
             if loss_log is not None:
