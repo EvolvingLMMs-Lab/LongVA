@@ -13,4 +13,7 @@ train.py \
 --seq-length 64000 \
 --rope-theta 1000000000 \
 --parallel_mode zigzag_ring_attn \
---checkpointing-steps 200
+--checkpointing-steps 5 \
+--resume-from-checkpoint output/Qwen2-7B-Instruct-extend/states/step_5
+
+ | 17/2000 [11:10<20:52:43, 37.90s/it, loss=1.9, ppl=6.69]

@@ -113,10 +113,27 @@ def main(args):
         range(args.max_train_steps), disable=not accelerator.is_local_main_process
     )
     completed_steps = 0
-
+    if args.resume_from_checkpoint:
+        accelerator.print(
+            f"Resuming from checkpoint {args.resume_from_checkpoint}")
+        accelerator.load_state(args.resume_from_checkpoint)
+        path = os.path.basename(args.resume_from_checkpoint)
+        training_difference = os.path.splitext(path)[0]
+        resume_step = (
+            int(training_difference.replace("step_", ""))
+        )
+        skip = 0
+        completed_steps += resume_step
+        progress_bar.update(resume_step)
+        accelerator.print(f"Resuming training from step {resume_step}")
+        
     model.train()
     loss_func = CrossEntropyLoss(inplace_backward=True)
     for step, batch in enumerate(train_loader):
+        if args.resume_from_checkpoint:
+            skip += 1
+            if skip <= resume_step * args.gradient_accumulate_every:
+                continue
         input_ids = batch["input_ids"][..., : args.seq_length + 1][..., :-1]
         target_ids = batch["input_ids"][..., : args.seq_length + 1][..., 1:]
         position_ids = (
@@ -157,6 +174,7 @@ def main(args):
 
                 # we now try gathered loss to verify if ring attention and dist flash attention produce the same loss
                 # this may slow down the training
+                completed_steps += 1
                 gathered_loss = accelerator.reduce(loss.clone().detach(), "mean")
                 loss_log = {
                     "loss": gathered_loss.item(),
@@ -172,20 +190,21 @@ def main(args):
             progress_bar.update(1)
             if loss_log is not None:
                 progress_bar.set_postfix(loss_log)
-            completed_steps += 1
             if isinstance(args.checkpointing_steps, int) and completed_steps > 0:
                 if completed_steps % args.checkpointing_steps == 0:
-                    output_dir = f"step_{completed_steps}"
-                    if args.output_dir is not None:
-                        output_dir = os.path.join(args.output_dir, output_dir)
-                        accelerator.wait_for_everyone()
-                        state_dict = accelerator.get_state_dict(model)
-                        accelerator.unwrap_model(model).save_pretrained(
-                            output_dir,
-                            is_main_process=accelerator.is_main_process,
-                            save_function=accelerator.save,
-                            state_dict=state_dict,
-                        )
+                    state_dir = os.path.join(args.output_dir, "states")
+                    state_dir = os.path.join(state_dir, f"step_{completed_steps}")
+                    os.makedirs(state_dir, exist_ok=True)
+                    model_weight_dir = os.path.join(args.output_dir,  f"step_{completed_steps}")
+                    accelerator.save_state(state_dir)
+                    accelerator.wait_for_everyone()
+                    state_dict = accelerator.get_state_dict(model)
+                    accelerator.unwrap_model(model).save_pretrained(
+                        model_weight_dir,
+                        is_main_process=accelerator.is_main_process,
+                        save_function=accelerator.save,
+                        state_dict=state_dict,
+                    )
         if completed_steps >= args.max_train_steps:
             break
 
@@ -216,6 +235,7 @@ if __name__ == "__main__":
     args.add_argument("--output-dir", type=str, required=True)
     args.add_argument("--wandb", type=str)
     args.add_argument("--seed", type=int, default=42)
+    args.add_argument("--resume-from-checkpoint", type=str)
     args.add_argument("--max-train-steps", type=int, default=400)
     args.add_argument("--checkpointing-steps", type=int, default=100)
     args.add_argument("--learning-rate", type=float, default=1e-5)
