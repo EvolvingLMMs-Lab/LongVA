@@ -1,7 +1,7 @@
 from huggingface_hub import snapshot_download
 
-snapshot_download(repo_id='01-ai/Yi-1.5-9B-Chat-16K',
-                  local_dir='output/Yi-1.5-9B-Chat-16K',
+snapshot_download(repo_id='LongVa/Qwen2-7B-Instruct-extend-step_1000',
+                  local_dir='output/Qwen2-7B-Instruct-extend-step_1000',
                   repo_type='model',
                   local_dir_use_symlinks=False,
                   resume_download=True)
