@@ -12,6 +12,8 @@ from tqdm import tqdm
 import gc
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from easy_context import Qwen2ForCausalLM_RingAttn
+
 import seaborn as sns
 import pandas as pd
 import random
@@ -36,9 +38,14 @@ DISTRACTOR_LIST = ["\nThe special magic New York number is: {}.\n", \
     "\nThe special magic Beijing number is: {}.\n",
     "\nThe special magic Berlin number is: {}.\n",]
 PREFIX = "This is a very long story book: <book>"
-QUESTION_STR = "</book>.\n Based on the content of the book, Question: What is the special magic Singapore number? Answer: The special magic Singapore number is:"
+QUESTION_STR = "</book>.\n Based on the content of the book, Question: What is the special magic Singapore number? Answer: The special magic Singapore number is: "
 
 
+def safe_tokenize(tokenizer, text):
+    tokenized = tokenizer.encode(text)
+    if tokenizer.bos_token != None and len(tokenized) > 0 and tokenized[0] == tokenizer.bos_token_id:
+        tokenized = tokenized[1:]
+    return tokenized
 def eval_forward(accelerator, model, input_ids, pad_id, answer_ids, tokenizer, distractor_number_list):
     # first append labels to input_ids
     prompt_length = input_ids.shape[1]
@@ -108,16 +115,16 @@ def eval_forward(accelerator, model, input_ids, pad_id, answer_ids, tokenizer, d
 def load_haystack(args, accelerator, tokenizer):
     context = ""
     # do not count <s>
-    while len(tokenizer.encode(context)) - 1 < args.max_context_length:
-        accelerator.print(f"Current Context Length: {len(tokenizer.encode(context))-1}")
+    while len(safe_tokenize(tokenizer,context)) - 1 < args.max_context_length:
+        accelerator.print(f"Current Context Length: {len(safe_tokenize(tokenizer,context))-1}")
         accelerator.print(glob.glob(f"{args.haystack_dir}/*.txt"))
         for file in glob.glob(f"{args.haystack_dir}/*.txt"):
             with open(file, "r") as f:
                 accelerator.print(f"Reading {file}")
                 context += f.read()
-        if len(tokenizer.encode(context)) - 1 > args.max_context_length:
+        if len(safe_tokenize(tokenizer,context)) - 1 > args.max_context_length:
             break
-    tokenized_haystack = tokenizer.encode(context)
+    tokenized_haystack = safe_tokenize(tokenizer,context)
     return tokenized_haystack
 
 
@@ -164,26 +171,34 @@ def main(args):
         args.model,
         model_max_length=sys.maxsize,
         trust_remote_code=True,
-        add_bos_token=True,
     )
     tokenizer.pad_token = tokenizer.eos_token
     accelerator = Accelerator(
         mixed_precision="bf16",
     )
     kwargs = {"rope_theta": args.rope_theta} if args.rope_theta is not None else {}
-    model = LlamaForCausalLM.from_pretrained(
-        args.model,
-        torch_dtype=torch.bfloat16,
-        _attn_implementation="flash_attention_2",
-        device_map=accelerator.device,
-        **kwargs,
-    )
+    if "qwen2" in args.model.lower():
+        model = Qwen2ForCausalLM_RingAttn.from_pretrained(
+            args.model,
+            torch_dtype=torch.bfloat16,
+            _attn_implementation="flash_attention_2",
+            device_map=accelerator.device,
+            **kwargs,
+        )
+    else:
+        model = LlamaForCausalLM.from_pretrained(
+            args.model,
+            torch_dtype=torch.bfloat16,
+            _attn_implementation="flash_attention_2",
+            device_map=accelerator.device,
+            **kwargs,
+        )
     model = accelerator.prepare(model)
     model.gradient_checkpointing_enable()
     tokenizer.pad_token = tokenizer.eos_token
     # remember to remove <s>
     accelerator.print("Preparing Haystack...")
-    tokenized_haystack = load_haystack(args, accelerator, tokenizer)[1:]
+    tokenized_haystack = load_haystack(args, accelerator, tokenizer)
     tokenized_prefix = tokenizer.encode(PREFIX)
 
     accelerator.print("Starting Evaluation...")
@@ -201,7 +216,7 @@ def main(args):
         for i in range(args.num_distractor)
     ]
     tokenized_distractor_list = [
-        tokenizer.encode(distractor_str)[1:] for distractor_str in distractor_str_list
+        safe_tokenize(tokenizer,distractor_str) for distractor_str in distractor_str_list
     ]
     accelerator.print(distractor_str_list)
     all_accuries = []
@@ -217,9 +232,9 @@ def main(args):
                 question_str = QUESTION_STR
                 asnwer_str = str(random_number)
 
-                tokenized_needle = tokenizer.encode(needle_str)[1:]
-                tokenized_postfix = tokenizer.encode(question_str)[1:]
-                tokenizer_answer = tokenizer.encode(asnwer_str)[1:]
+                tokenized_needle = safe_tokenize(tokenizer,needle_str)
+                tokenized_postfix = safe_tokenize(tokenizer,question_str)
+                tokenizer_answer = safe_tokenize(tokenizer,asnwer_str)
 
                 prompt = construct_prompt(
                     tokenized_haystack,

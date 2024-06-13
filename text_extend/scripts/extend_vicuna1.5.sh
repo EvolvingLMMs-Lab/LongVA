@@ -4,7 +4,7 @@ text_extend/text_extend_train.py \
 --batch-size 1 \
 --gradient-accumulate-every 4  \
 --seed 2024 \
---output-dir  ./output/vicuna-7b-v1.5-extend \
+--output-dir  text_extend/training_output/vicuna-7b-v1.5-extend \
 --wandb LMExtend \
 --max-train-steps 1000  \
 --learning-rate 1e-5  \
@@ -14,3 +14,5 @@ text_extend/text_extend_train.py \
 --rope-theta 1000000000 \
 --parallel_mode zigzag_ring_attn \
 --checkpointing-steps 200
+
+rm text_extend/training_output/vicuna-7b-v1.5-extend/model.safetensors
