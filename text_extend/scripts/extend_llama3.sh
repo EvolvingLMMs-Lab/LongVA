@@ -1,12 +1,12 @@
 accelerate launch \
 --config_file  accelerate_configs/single_node.yaml \
-train.py \
+text_extend/text_extend_train.py \
 --batch-size 1 \
 --gradient-accumulate-every 4 \
 --seed 2024 \
 --output-dir output/Meta-Llama-3-8B-Instruct-extend \
 --wandb LMExtend \
---max-train-steps 2000  \
+--max-train-steps 1000  \
 --learning-rate 1e-5  \
 --dataset  PY007/slimpajama_LLAMA3_tokenized_upsample_4096_chunk_256K \
 --model meta-llama/Meta-Llama-3-8B-Instruct   \
