@@ -8,12 +8,13 @@ from tqdm import tqdm
 from accelerate import Accelerator
 import glob
 import numpy as np
+import json
 from tqdm import tqdm
 import gc
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from easy_context import Qwen2ForCausalLM_RingAttn
-
+import os
 import seaborn as sns
 import pandas as pd
 import random
@@ -165,7 +166,7 @@ def construct_prompt(
     return prompt
 
 
-def main(args):
+def inference(args):
     model = args.model
     tokenizer = AutoTokenizer.from_pretrained(
         args.model,
@@ -263,47 +264,68 @@ def main(args):
                 accelerator.print(result)
                 all_accuries.append(result)
     if accelerator.is_main_process:
-        df = pd.DataFrame(all_accuries)
-        cmap = LinearSegmentedColormap.from_list(
-            "custom_cmap", ["#F0496E", "#EBB839", "#0CD79F"]
-        )
-
-        pivot_table = pd.pivot_table(
-            df,
-            values="Score",
-            index=["Document Depth", "Context Length"],
-            aggfunc="mean",
-        ).reset_index()  # This will aggregate
-        pivot_table = pivot_table.pivot(
-            index="Document Depth", columns="Context Length", values="Score"
-        )
-        # Create the heatmap with better aesthetics
-        plt.figure(figsize=(17.5, 8))  # Can adjust these dimensions as needed
-        sns.heatmap(
-            pivot_table,
-            # annot=True,
-            fmt="g",
-            cmap=cmap,
-            cbar_kws={"label": "Score"},
-        )
-
-        # More aesthetics
-        plt.xlabel("Token Limit")  # X-axis label
-        plt.ylabel("Depth Percent")  # Y-axis label
-        plt.xticks(rotation=45)  # Rotates the x-axis labels to prevent overlap
-        plt.yticks(rotation=0)  # Ensures the y-axis labels are horizontal
-        plt.tight_layout()  # Fits everything neatly into the figure area
-        # save
         model_name = args.model.split("/")[-1]
-        plt.savefig(f"data/heatmap_{model_name}.png".format(model_name))
-        # calculate average accuracy
-        average_accuracy = df["Score"].mean()
-        accelerator.print(f"Average Accuracy: {average_accuracy}")
-        # save as txt
-        with open(f"data/accuracy_{model_name}.txt", "w") as f:
-            f.write(f"Average Accuracy: {average_accuracy}\n")
-        
+        os.makedirs(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}", exist_ok=True)
+        # save all_accuries as json
+        with open(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}/all_accuracies.json", "w") as f:
+            json.dump(all_accuries, f)
+    return all_accuries, accelerator
 
+
+def plot(args,  all_accuries):
+    df = pd.DataFrame(all_accuries)
+    cmap = LinearSegmentedColormap.from_list(
+        "custom_cmap", ["#F0496E", "#EBB839", "#0CD79F"]
+    )
+
+    pivot_table = pd.pivot_table(
+        df,
+        values="Score",
+        index=["Document Depth", "Context Length"],
+        aggfunc="mean",
+    ).reset_index()  # This will aggregate
+    pivot_table = pivot_table.pivot(
+        index="Document Depth", columns="Context Length", values="Score"
+    )
+    # Create the heatmap with better aesthetics
+    plt.figure(figsize=(17.5, 8))  # Can adjust these dimensions as needed
+    sns.heatmap(
+        pivot_table,
+        # annot=True,
+        fmt="g",
+        cmap=cmap,
+        cbar_kws={"label": "Score"},
+    )
+
+    # More aesthetics
+    plt.xlabel("Token Limit")  # X-axis label
+    plt.ylabel("Depth Percent")  # Y-axis label
+    plt.xticks(rotation=45)  # Rotates the x-axis labels to prevent overlap
+    plt.yticks(rotation=0)  # Ensures the y-axis labels are horizontal
+    plt.tight_layout()  # Fits everything neatly into the figure area
+    # save
+    model_name = args.model.split("/")[-1]
+    # mkdir if not exist text_extend/niah_output/distractor_{args.num_distractor}/
+    os.makedirs(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}", exist_ok=True)
+    plt.savefig(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}/heatmap.png")
+    # calculate average accuracy
+    average_accuracy = df["Score"].mean()
+    print(f"Average Accuracy: {average_accuracy}")
+    # save as txt
+    with open(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}/avg_accuracy.txt", "w") as f:
+        f.write(f"Average Accuracy: {average_accuracy}\n")
+        
+def main(args):
+    if args.plot_only:
+        # load all_accuracies from json
+        model_name = args.model.split("/")[-1]
+        with open(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}/all_accuracies.json", "r") as f:
+            all_accuracies = json.load(f)
+        plot(args, all_accuracies)
+    else:
+        all_accuracies, accelerator = inference(args)
+        if accelerator.is_main_process:
+            plot(args, all_accuracies)
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
@@ -315,6 +337,7 @@ if __name__ == "__main__":
     args.add_argument("--num_samples", type=int, default=10)
     args.add_argument("--rope_theta", type=float, default=None)
     args.add_argument("--rnd_number_digits", type=int, default=7)
-    args.add_argument("--haystack_dir", type=str, required=True)
+    args.add_argument("--haystack_dir", type=str, default=None)
     args.add_argument("--num_distractor", type=int, default=0)
+    args.add_argument("--plot_only", action="store_true")
     main(args.parse_args())
