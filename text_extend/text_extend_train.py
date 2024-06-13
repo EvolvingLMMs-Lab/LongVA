@@ -9,6 +9,7 @@ from accelerate.utils import InitProcessGroupKwargs, set_seed
 from tqdm import tqdm
 from transformers import set_seed, default_data_collator
 from transformers import AutoModelForCausalLM
+from easy_context import Qwen2ForCausalLM_RingAttn
 import transformers
 from flash_attn.losses.cross_entropy import CrossEntropyLoss
 import math
@@ -54,22 +55,31 @@ def main(args):
         train_dataset = load_from_disk(args.dataset)
     if isinstance(train_dataset, DatasetDict):
         train_dataset = train_dataset["train"]
+    if "Qwen2" in args.model:
+        model = Qwen2ForCausalLM_RingAttn.from_pretrained(
+            args.model,
+            device_map=accelerator.device,
+            torch_dtype=torch.bfloat16,
+            rope_theta=args.rope_theta,
+            _attn_implementation="flash_attention_2",
+        )
+        assert args.parallel_mode == "zigzag_ring_attn", "Only support zigzag ring attention for Qwen2 model"
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            device_map=accelerator.device,
+            torch_dtype=torch.bfloat16,
+            rope_theta=args.rope_theta,
+            _attn_implementation="flash_attention_2",
+        )
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        device_map=accelerator.device,
-        torch_dtype=torch.bfloat16,
-        rope_theta=args.rope_theta,
-        _attn_implementation="flash_attention_2",
-    )
-
-    assert isinstance(
-        model, (transformers.LlamaForCausalLM, transformers.MistralForCausalLM)
-    ), "Only support llama and mistral model"
-    model_type = (
-        "llama" if isinstance(model, transformers.LlamaForCausalLM) else "mistral"
-    )
-    apply_seq_parallel_monkey_patch(args.parallel_mode, model_type)
+        assert isinstance(
+            model, (transformers.LlamaForCausalLM, transformers.MistralForCausalLM)
+        ), "Only support llama and mistral model"
+        model_type = (
+            "llama" if isinstance(model, transformers.LlamaForCausalLM) else "mistral"
+        )
+        apply_seq_parallel_monkey_patch(args.parallel_mode, model_type)
 
     if "input_ids" not in train_dataset.column_names:
         raise RuntimeError("Dataset must include an `input_ids` feature")
@@ -81,7 +91,7 @@ def main(args):
     train_loader = DataLoader(
         train_dataset,
         collate_fn=default_data_collator,
-        shuffle=True,
+        shuffle=False,
         batch_size=args.batch_size,
     )
     if args.learning_rate != 1e-5:
@@ -103,10 +113,29 @@ def main(args):
         range(args.max_train_steps), disable=not accelerator.is_local_main_process
     )
     completed_steps = 0
-
+    if args.resume_from_checkpoint:
+        accelerator.print(
+            f"Resuming from checkpoint {args.resume_from_checkpoint}")
+        accelerator.load_state(args.resume_from_checkpoint)
+        path = os.path.basename(args.resume_from_checkpoint)
+        training_difference = os.path.splitext(path)[0]
+        resume_step = (
+            int(training_difference.replace("step_", ""))
+        )
+        skip = 0
+        # train_loader = accelerator.skip_first_batches(train_loader, resume_step*args.gradient_accumulate_every-1)
+        completed_steps += resume_step
+        progress_bar.update(resume_step)
+        accelerator.print(f"Resuming training from step {resume_step}")
+        
     model.train()
     loss_func = CrossEntropyLoss(inplace_backward=True)
     for step, batch in enumerate(train_loader):
+        if args.resume_from_checkpoint:
+            skip += 1
+            if skip <= resume_step * args.gradient_accumulate_every:
+                accelerator.print(f"Skipping iter {skip}")
+                continue
         input_ids = batch["input_ids"][..., : args.seq_length + 1][..., :-1]
         target_ids = batch["input_ids"][..., : args.seq_length + 1][..., 1:]
         position_ids = (
@@ -147,6 +176,7 @@ def main(args):
 
                 # we now try gathered loss to verify if ring attention and dist flash attention produce the same loss
                 # this may slow down the training
+                completed_steps += 1
                 gathered_loss = accelerator.reduce(loss.clone().detach(), "mean")
                 loss_log = {
                     "loss": gathered_loss.item(),
@@ -157,25 +187,25 @@ def main(args):
             optim.step()
             scheduler.step()
             optim.zero_grad()
-
         if accelerator.sync_gradients:
             progress_bar.update(1)
             if loss_log is not None:
                 progress_bar.set_postfix(loss_log)
-            completed_steps += 1
             if isinstance(args.checkpointing_steps, int) and completed_steps > 0:
                 if completed_steps % args.checkpointing_steps == 0:
-                    output_dir = f"step_{completed_steps}"
-                    if args.output_dir is not None:
-                        output_dir = os.path.join(args.output_dir, output_dir)
-                        accelerator.wait_for_everyone()
-                        state_dict = accelerator.get_state_dict(model)
-                        accelerator.unwrap_model(model).save_pretrained(
-                            output_dir,
-                            is_main_process=accelerator.is_main_process,
-                            save_function=accelerator.save,
-                            state_dict=state_dict,
-                        )
+                    state_dir = os.path.join(args.output_dir, "states")
+                    state_dir = os.path.join(state_dir, f"step_{completed_steps}")
+                    os.makedirs(state_dir, exist_ok=True)
+                    model_weight_dir = os.path.join(args.output_dir,  f"step_{completed_steps}")
+                    accelerator.save_state(state_dir)
+                    accelerator.wait_for_everyone()
+                    state_dict = accelerator.get_state_dict(model)
+                    accelerator.unwrap_model(model).save_pretrained(
+                        model_weight_dir,
+                        is_main_process=accelerator.is_main_process,
+                        save_function=accelerator.save,
+                        state_dict=state_dict,
+                    )
         if completed_steps >= args.max_train_steps:
             break
 
@@ -206,6 +236,7 @@ if __name__ == "__main__":
     args.add_argument("--output-dir", type=str, required=True)
     args.add_argument("--wandb", type=str)
     args.add_argument("--seed", type=int, default=42)
+    args.add_argument("--resume-from-checkpoint", type=str)
     args.add_argument("--max-train-steps", type=int, default=400)
     args.add_argument("--checkpointing-steps", type=int, default=100)
     args.add_argument("--learning-rate", type=float, default=1e-5)
