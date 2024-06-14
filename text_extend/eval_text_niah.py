@@ -13,6 +13,7 @@ from tqdm import tqdm
 import gc
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.ticker import FuncFormatter
 from easy_context import Qwen2ForCausalLM_RingAttn
 import os
 import seaborn as sns
@@ -289,23 +290,39 @@ def plot(args,  all_accuries):
     )
     # Create the heatmap with better aesthetics
     plt.figure(figsize=(17.5, 8))  # Can adjust these dimensions as needed
-    sns.heatmap(
+    ax = sns.heatmap(
         pivot_table,
         # annot=True,
         fmt="g",
         vmin=0,
         vmax=1,
         linecolor='white',
-        linewidths=0.5, 
+        linewidths=1.5, 
         cmap=cmap,
         cbar_kws={"label": "Score"},
     )
+    
+    # Set the color bar label font size
+    cbar = ax.collections[0].colorbar
+    cbar.ax.yaxis.label.set_size(14)
+    cbar.ax.tick_params(labelsize=14)
+
+    
+    # Define the formatter function
+    def thousands_formatter(x, pos):
+        if x >= 1000:
+            return f'{int(x/1000)}K'
+        return f'{x}'
+
+    context_lengths = pivot_table.columns
+    formatted_context_lengths = [thousands_formatter(x, None) for x in context_lengths]
 
     # More aesthetics
-    plt.xlabel("Token Limit")  # X-axis label
-    plt.ylabel("Depth Percent")  # Y-axis label
-    plt.xticks(rotation=45)  # Rotates the x-axis labels to prevent overlap
-    plt.yticks(rotation=0)  # Ensures the y-axis labels are horizontal
+    plt.xlabel("Token Limit", fontsize=14)  # X-axis label
+    plt.ylabel("Depth Percent", fontsize=14)  # Y-axis label
+    plt.xticks(ticks=[i + 0.5 for i in range(len(context_lengths))], labels=formatted_context_lengths, rotation=45, fontsize=14)
+    # plt.xticks(rotation=45, fontsize=14)  # Rotates the x-axis labels to prevent overlap
+    plt.yticks(rotation=0, fontsize=14)  # Ensures the y-axis labels are horizontal
     plt.tight_layout()  # Fits everything neatly into the figure area
     # save
     model_name = args.model.split("/")[-1]
