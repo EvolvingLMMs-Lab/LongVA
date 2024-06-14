@@ -1,7 +1,0 @@
-[
-    {
-        "path": "vision_niah/data/query_images/image1.jpg",
-        "prompt": "Find the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.",
-        "answer": "Yellow"
-    }
-]

@@ -1,6 +1,6 @@
 for model in Qwen2-7B-Instruct-extend-step_1000 Meta-Llama-3-8B-Instruct-extend-step1000 Yi-1.5-9B-Chat-16k-extend-step_1000
 do
-for num_distractor in 0 5
+for num_distractor in 5
 do
 accelerate launch --num_processes 8 --config_file  accelerate_configs/deepspeed_inference.yaml  --main_process_port 6000 text_extend/eval_text_niah.py \
     --model text_extend/training_output/$model  \
