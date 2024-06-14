@@ -57,7 +57,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-Vicuna")
-    parser.add_argument("--video_path", type=str, default="video_needle_haystack/data/haystack_videos/movie.mp4")
+    parser.add_argument("--video_path", type=str, default="vision_niah/data/haystack_videos/movie.mp4")
     parser.add_argument("--sampled_frames_num", type=int, default=7200)
     parser.add_argument("--output_dir", type=str, default="video_needle_haystack/data/haystack_vicuna_embeddings")
     parser.add_argument("--pooling_size", type=int, default=0)

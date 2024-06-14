@@ -4,6 +4,7 @@ import sys
 import torch
 from transformers import AutoTokenizer
 from transformers import LlamaForCausalLM
+from easy_context import Qwen2ForCausalLM_RingAttn
 from tqdm import tqdm
 from accelerate import Accelerator
 import glob
@@ -11,6 +12,7 @@ import numpy as np
 from tqdm import tqdm
 import gc
 import matplotlib.pyplot as plt
+import os
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import pandas as pd
@@ -51,6 +53,11 @@ prompts = {
         "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
         "answer" : "Green"
     },
+    "llama3_color_qwen": {
+        "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
+        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
+        "answer" : "Green"
+    },
     "llama3_color_medecine_bottle": {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
         "postprompt": "\nInside the video, there is a frame of the selenium medicine bottle. Find that frame. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
@@ -70,6 +77,13 @@ prompts = {
 # \nAnswer the question using a single word or phrase.
 # The color of the bottle cap is
 # answer = "Yellow"
+
+
+def safe_tokenize(tokenizer, text):
+    tokenized = tokenizer.encode(text, return_tensors="pt")
+    if tokenizer.bos_token != None and len(tokenized) > 0 and tokenized[0, 0] == tokenizer.bos_token_id:
+        tokenized = tokenized[:, 1:]
+    return tokenized
 
 # answer = "more bet"
 def eval_forward(accelerator, model, input_embeds, answer_embeds, pad_id, answer_ids, tokenizer):
@@ -146,7 +160,7 @@ def load_haystack(args, accelerator):
     return haystack_embeddings
 
 def load_text_embeddings(str, tokenizer, model, accelerator, replace_double_newline=False): 
-    token_ids = tokenizer.encode(str, return_tensors="pt")[:, 1:]
+    token_ids = safe_tokenize(tokenizer, str)
     def replace_double_newline_func(token_ids):
         # subsitute token id 271 to two 198]
         # for example:
@@ -178,13 +192,22 @@ def main(args):
         mixed_precision="bf16",
     )
     kwargs = {"rope_theta": args.rope_theta} if args.rope_theta is not None else {}
-    model = LlamaForCausalLM.from_pretrained(
-        args.model,
-        torch_dtype=torch.bfloat16,
-        _attn_implementation="flash_attention_2",
-        device_map=accelerator.device,
-        **kwargs,
-    )
+    if "qwen2" in args.model.lower():
+        model = Qwen2ForCausalLM_RingAttn.from_pretrained(
+            args.model,
+            torch_dtype=torch.bfloat16,
+            _attn_implementation="flash_attention_2",
+            device_map=accelerator.device,
+            **kwargs,
+        )
+    else:
+        model = LlamaForCausalLM.from_pretrained(
+            args.model,
+            torch_dtype=torch.bfloat16,
+            _attn_implementation="flash_attention_2",
+            device_map=accelerator.device,
+            **kwargs,
+        )
     tokenizer.pad_token = tokenizer.eos_token
     # remember to remove <s>
     accelerator.print("Preparing Haystack...")
@@ -196,7 +219,7 @@ def main(args):
     preprompt_embeddings = load_text_embeddings(prompt["preprompt"], tokenizer, model, accelerator, args.replace_double_newline)
     postprompt_embeddings = load_text_embeddings(prompt["postprompt"], tokenizer, model, accelerator, args.replace_double_newline)
     answer_embedding_list = [load_text_embeddings(answer, tokenizer, model, accelerator)]
-    answer_id_list = [tokenizer.encode(answer, return_tensors="pt")[:,1:]]
+    answer_id_list = [safe_tokenize(tokenizer, answer)]
     query_embedding_list = [torch.load(args.needle_path, map_location="cpu").to(torch.bfloat16).to(accelerator.device)]
     accelerator.print("Starting Evaluation...")
     model = accelerator.prepare(model)
@@ -261,7 +284,9 @@ def main(args):
         plt.tight_layout()  # Fits everything neatly into the figure area
         # save
         model_name = args.model.split("/")[-1]
-        plt.savefig(f"data/{args.prompt_template}/heatmap_{model_name}.png".format(model_name))
+        # mkdir if not exist
+        os.makedirs("vision_niah/niah_output/{}".format(args.prompt_template), exist_ok=True)
+        plt.savefig(f"vision_niah/niah_output/{args.prompt_template}/heatmap_{model_name}.png".format(model_name))
 
 
 if __name__ == "__main__":

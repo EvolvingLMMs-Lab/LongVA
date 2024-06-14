@@ -51,7 +51,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-Vicuna")
-    parser.add_argument("--image_json", type=str, default="video_needle_haystack/data/query_images/prompts.json")
+    parser.add_argument("--image_json", type=str, default="vision_niah/data/query_images/prompts.json")
     parser.add_argument("--output_dir", type=str, default="video_needle_haystack/data/needle_vicuna_embeddings")
     parser.add_argument("--pooling_size", type=int, default=0)
     parser.add_argument("--add_newline_token", action="store_true")

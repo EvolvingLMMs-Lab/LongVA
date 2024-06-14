@@ -268,7 +268,7 @@ def inference(args):
         os.makedirs(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}", exist_ok=True)
         # save all_accuries as json
         with open(f"text_extend/niah_output/distractor_{args.num_distractor}/{model_name}/all_accuracies.json", "w") as f:
-            json.dump(all_accuries, f)
+            json.dump(all_accuries, f, indent=4)
     return all_accuries, accelerator
 
 
