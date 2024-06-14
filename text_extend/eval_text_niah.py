@@ -275,7 +275,7 @@ def inference(args):
 def plot(args,  all_accuries):
     df = pd.DataFrame(all_accuries)
     cmap = LinearSegmentedColormap.from_list(
-        "custom_cmap", ["#F0496E", "#EBB839", "#0CD79F"]
+        "custom_cmap", ["#F0496E", "#EBB839", "#9ad5b3"]
     )
 
     pivot_table = pd.pivot_table(
@@ -293,6 +293,10 @@ def plot(args,  all_accuries):
         pivot_table,
         # annot=True,
         fmt="g",
+        vmin=0,
+        vmax=1,
+        linecolor='white',
+        linewidths=0.5, 
         cmap=cmap,
         cbar_kws={"label": "Score"},
     )
