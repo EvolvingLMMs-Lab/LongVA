@@ -30,59 +30,30 @@ torch.manual_seed(SEED)
 random.seed(SEED)
 np.random.seed(SEED)
 
-prompts = {
+prompt_templates = {
     "mistral": {
         "preprompt": "<s>[INST]",
-        "postprompt": "Find the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase. [/INST]"
+        "postprompt": "[/INST]"
     },
     "vicuna": {
         "preprompt": "<s>A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions. USER:",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase. ASSISTANT:"
+        "postprompt": "ASSISTANT:"
     },
-    #     "vicuna": {
-    #     "preprompt": "<s>A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions. USER:",
-    #     "postprompt": "\nThe Chinese name of this movie is 孤注一掷. What is its English translation?\nAnswer the question using a single word or phrase. ASSISTANT: No"
-    # }
-    "llama3_color_easy": {
+    "llama3": {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nThe color of the bottle cap is",
-        "answer" : " green"
-    },
-    "llama3_color": {
-        "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+        "postprompt": "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
         "answer" : "Green"
     },
-    "qwen_color": {
+    "qwen2": {
         "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
+        "postprompt": "<|im_end|>\n<|im_start|>assistant\n",
         "answer" : "Green"
     }, 
-    "yi_color": {
+    "yi": {
         "preprompt": "<|im_start|>system\nAnswer the questions.<|im_end|>\n<|im_start|>user\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
+        "postprompt": "<|im_end|>\n<|im_start|>assistant\n",
         "answer" : "Green"
     },
-    "llama3_color_medecine_bottle": {
-        "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
-        "postprompt": "\nInside the video, there is a frame of the selenium medicine bottle. Find that frame. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-        "answer" : "Green"
-    },
-    "llama3_ocr": {
-        "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. How many mg does each tablet contain?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-        "answer": "200"
-    },
-    "yi_ocr": {
-        "preprompt": "<|im_start|>system\nAnswer the questions.<|im_end|>\n<|im_start|>user\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. How many mg does each tablet contain?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
-        "answer" : "200"
-    },
-    "llama3_tablets_count": {
-        "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
-        "postprompt": "\nFind the frame with the image of Selenium tablets. How many pills does it contain?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-        "answer": "100"
-    }
 }
 # \nAnswer the question using a single word or phrase.
 # The color of the bottle cap is
@@ -231,13 +202,23 @@ def main(args):
     haystack_embeddings = load_haystack(args, accelerator)
     assert len(haystack_embeddings) >= args.max_frame_num, "Haystack embeddings are not enough. Max frame {} is not found. Currently only {} frames.".format(args.max_frame_num, len(haystack_embeddings))
     haystack_embeddings = haystack_embeddings[:args.max_frame_num].to(accelerator.device)
-    prompt = prompts[args.prompt_template]
-    answer = prompt["answer"]
+    prompt = prompt_templates[args.prompt_template]
     preprompt_embeddings = load_text_embeddings(prompt["preprompt"], tokenizer, model, accelerator, args.replace_double_newline)
     postprompt_embeddings = load_text_embeddings(prompt["postprompt"], tokenizer, model, accelerator, args.replace_double_newline)
-    answer_embedding_list = [load_text_embeddings(answer, tokenizer, model, accelerator)]
-    answer_id_list = [safe_tokenize(tokenizer, answer)]
-    query_embedding_list = [torch.load(args.needle_path, map_location="cpu").to(torch.bfloat16).to(accelerator.device)]
+    
+    needle_dataset = load_dataset(args.needle_dataset)
+    answer_embedding_list = []
+    answer_id_list = []
+    needle_embedding_list = []
+    question_embeding_list = []
+    for index, instance in enumerate(needle_dataset):
+        answer = instance["answer"]
+        question = instance["question"]
+        needle_embedding.append(torch.load(args.needle_embedding_dir + "/{index}.pt", map_location="cpu").to(torch.bfloat16).to(accelerator.device))
+        answer_embedding_list.append(load_text_embeddings(answer, tokenizer, model, accelerator))
+        answer_id_list.append(safe_tokenize(tokenizer, answer))
+        question_embeding_list.append(load_text_embeddings(question, tokenizer, model, accelerator))
+        
     accelerator.print("Starting Evaluation...")
     model = accelerator.prepare(model)
     model.gradient_checkpointing_enable()
@@ -249,10 +230,10 @@ def main(args):
     ):
         for depth in np.arange(0, 1 + args.depth_interval, args.depth_interval):
             accuracies = []
-            for query_embedding, answer_embedding, answer_id in zip(query_embedding_list, answer_embedding_list, answer_id_list):
+            for question_embedding, needle_embedding, answer_embedding, answer_id in zip(question_embeding_list, needle_embedding_list, answer_embedding_list, answer_id_list):
                 query_frame_idx = int(depth * num_frames)
-                input_frames = torch.cat([haystack_embeddings[:query_frame_idx],query_embedding.unsqueeze(0), haystack_embeddings[query_frame_idx:num_frames]], dim=0).view(-1, haystack_embeddings.shape[-1]).unsqueeze(0)
-                input_emebds = torch.cat([preprompt_embeddings, input_frames, postprompt_embeddings], dim=1)
+                input_frames = torch.cat([haystack_embeddings[:query_frame_idx],needle_embedding.unsqueeze(0), haystack_embeddings[query_frame_idx:num_frames]], dim=0).view(-1, haystack_embeddings.shape[-1]).unsqueeze(0)
+                input_emebds = torch.cat([preprompt_embeddings, input_frames,question_embedding, postprompt_embeddings], dim=1)
                 correct = eval_forward(
                     accelerator, model, input_emebds, answer_embedding, tokenizer.pad_token_id, answer_id, tokenizer
                 )
@@ -310,13 +291,14 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-32K")
     args.add_argument("--max_frame_num", type=int, default=300)
+    args.add_argument("--needle_dataset", type=str, default="LongVa/needles")
     args.add_argument("--min_frame_num", type=int, default=20)
     args.add_argument("--frame_interval", type=int, default=20)
     args.add_argument("--depth_interval", type=float, default=0.1)
     args.add_argument("--num_samples", type=int, default=1)
     args.add_argument("--rope_theta", type=float, default=None)
     args.add_argument("--haystack_dir", type=str, default="video_needle_haystack/data/haystack_embeddings")
-    args.add_argument("--needle_path", type=str, default="")
+    args.add_argument("--needle_embedding_dir", type=str, default="vision_niah/data/needle_embeddings")
     args.add_argument("--prompt_template", type=str)
     args.add_argument("--replace_double_newline", action="store_true")
     
