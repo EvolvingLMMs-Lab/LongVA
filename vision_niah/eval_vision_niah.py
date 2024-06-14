@@ -53,13 +53,13 @@ prompts = {
         "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
         "answer" : "Green"
     },
-    "llama3_color_qwen": {
+    "qwen_color": {
         "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
         "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
         "answer" : "Green"
-    },
-    "llama3_color_yi": {
-        "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
+    }, 
+    "yi_color": {
+        "preprompt": "<|im_start|>system\nAnswer the questions.<|im_end|>\n<|im_start|>user\n",
         "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
         "answer" : "Green"
     },
@@ -72,6 +72,11 @@ prompts = {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
         "postprompt": "\nFind the frame with the image of Selenium tablets. How many mg does each tablet contain?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
         "answer": "200"
+    },
+    "yi_ocr": {
+        "preprompt": "<|im_start|>system\nAnswer the questions.<|im_end|>\n<|im_start|>user\n",
+        "postprompt": "\nFind the frame with the image of Selenium tablets. How many mg does each tablet contain?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
+        "answer" : "200"
     },
     "llama3_tablets_count": {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
@@ -151,6 +156,13 @@ def eval_forward(accelerator, model, input_embeds, answer_embeds, pad_id, answer
             tokenizer.decode(pred.squeeze().tolist()),
             "Answer: ",
             tokenizer.decode(answer_ids.squeeze().tolist()),
+        )
+        # print id as well
+        print(
+            "Predicted: ",
+            pred.squeeze().tolist(),
+            "Answer: ",
+            answer_ids.squeeze().tolist(),
         )
     return int(correct)
 
