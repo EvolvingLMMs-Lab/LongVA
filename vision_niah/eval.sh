@@ -1,4 +1,4 @@
-for MODEL_NAME in LLaVA-NeXT-Qwen2-7B-extend-avgpool2x2-anyres7x7
+for MODEL_NAME in LLaVA-Yi-1.5-9B-extend-CLIP-anyres7x7-avgpool2x2
 do
 mkdir vision_niah/data/haystack_embeddings/$MODEL_NAME
 mkdir vision_niah/data/needle_embeddings/$MODEL_NAME

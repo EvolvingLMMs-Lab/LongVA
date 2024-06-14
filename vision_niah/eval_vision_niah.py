@@ -58,6 +58,11 @@ prompts = {
         "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
         "answer" : "Green"
     },
+    "llama3_color_yi": {
+        "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
+        "postprompt": "\nFind the frame with the image of Selenium tablets. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|im_end|>\n<|im_start|>assistant\n",
+        "answer" : "Green"
+    },
     "llama3_color_medecine_bottle": {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
         "postprompt": "\nInside the video, there is a frame of the selenium medicine bottle. Find that frame. What is the color of the bottle cap?\nAnswer the question using a single word or phrase.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
