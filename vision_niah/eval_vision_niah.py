@@ -18,6 +18,7 @@ import seaborn as sns
 import pandas as pd
 from pathlib import Path
 import random
+from datasets import load_dataset
 from easy_context import (
     prepare_seq_parallel_inputs,
     apply_seq_parallel_monkey_patch,
@@ -206,7 +207,7 @@ def main(args):
     preprompt_embeddings = load_text_embeddings(prompt["preprompt"], tokenizer, model, accelerator, args.replace_double_newline)
     postprompt_embeddings = load_text_embeddings(prompt["postprompt"], tokenizer, model, accelerator, args.replace_double_newline)
     
-    needle_dataset = load_dataset(args.needle_dataset)
+    needle_dataset = load_dataset(args.needle_dataset)["test"]
     answer_embedding_list = []
     answer_id_list = []
     needle_embedding_list = []
@@ -214,7 +215,7 @@ def main(args):
     for index, instance in enumerate(needle_dataset):
         answer = instance["answer"]
         question = instance["question"]
-        needle_embedding.append(torch.load(args.needle_embedding_dir + "/{index}.pt", map_location="cpu").to(torch.bfloat16).to(accelerator.device))
+        needle_embedding_list.append(torch.load(args.needle_embedding_dir + f"/{index}.pt", map_location="cpu").to(torch.bfloat16).to(accelerator.device))
         answer_embedding_list.append(load_text_embeddings(answer, tokenizer, model, accelerator))
         answer_id_list.append(safe_tokenize(tokenizer, answer))
         question_embeding_list.append(load_text_embeddings(question, tokenizer, model, accelerator))

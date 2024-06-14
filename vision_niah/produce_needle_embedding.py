@@ -16,7 +16,7 @@ def main(args):
     tokenizer, model, image_processor, context_len = load_pretrained_model(args.model, None, model_name, load_8bit=False,device_map="cuda:0")
     model.config.image_aspect_ratio = "pad"
     model.config.mm_patch_merge_type="flat"
-    dataset = load_datase(args.needle_dataset)
+    dataset = load_dataset(args.needle_dataset)["test"]
     for index, instance in enumerate(dataset):
         image = instance["image"].convert("RGB")
         image = process_images([image], image_processor, model.config).half()
@@ -36,6 +36,5 @@ if __name__ == "__main__":
     parser.add_argument("--needle_dataset", type=str, default="LongVa/needles")
     parser.add_argument("--output_dir", type=str, default="video_needle_haystack/data/needle_vicuna_embeddings")
     parser.add_argument("--pooling_size", type=int, default=0)
-    parser.add_argument("--add_newline_token", action="store_true")
     args = parser.parse_args()
     main(args)

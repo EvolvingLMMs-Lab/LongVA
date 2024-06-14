@@ -7,12 +7,12 @@ python vision_niah/produce_needle_embedding.py --model vision_niah/model_weights
 
 accelerate launch --num_processes 8 --config_file  accelerate_configs/deepspeed_inference.yaml  --main_process_port 6000 vision_niah/eval_vision_niah.py \
     --model  vision_niah/model_weights/$MODEL_NAME \
-    --needle_path vision_niah/data/needle_embeddings/$MODEL_NAME/image1.pt \
+    --needle_embedding_dir vision_niah/data/needle_embeddings/$MODEL_NAME \
     --haystack_dir vision_niah/data/haystack_embeddings/$MODEL_NAME \
-    --prompt_template llama3_color_yi \
-    --max_frame_num 3000 \
-    --min_frame_num 300 \
-    --frame_interval 300 \
+    --prompt_template qwen2 \
+    --max_frame_num 1600 \
+    --min_frame_num 1600 \
+    --frame_interval 1600 \
     --depth_interval 0.2 
 done
 
