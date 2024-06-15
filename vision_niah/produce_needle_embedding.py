@@ -33,7 +33,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-Vicuna")
-    parser.add_argument("--needle_dataset", type=str, default="LongVa/needles")
+    parser.add_argument("--needle_dataset", type=str, default="LongVa/longva_needles2")
     parser.add_argument("--output_dir", type=str, default="video_needle_haystack/data/needle_vicuna_embeddings")
     parser.add_argument("--pooling_size", type=int, default=0)
     args = parser.parse_args()

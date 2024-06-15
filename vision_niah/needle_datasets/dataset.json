@@ -1,0 +1,27 @@
+[
+    {
+        "path": "ucsd.jpeg",
+        "prompt": "\nFind the frame of the 'While You Were Out' note. What is the name of the university on that note?\nA. University of california, los angeles\nB. University of california, san diego\nC. University of california, berkeley\nD. University of california, santa barbara\nAnswer with the option's letter from the given choices directly.",
+        "answer": "B"
+    },
+    {
+        "path": "sora_balloon.png",
+        "prompt": "\nFind the frame of a couple in a wedding. In side the frame, there is a balloon on the bridegroom's head. What is the color of that ballon?\nAnswer the question using a single word or phrase.",
+        "answer": "Yellow"
+    },
+    {
+        "path": "selenium_green.jpg",
+        "prompt": "\nFind the frame with the image of Selenium tablets. How many mg does each tablet contain?\nAnswer the question using a single word or phrase.",
+        "answer": "200"
+    },
+    {
+        "path": "panda_scientist.png",
+        "prompt": "\nFind the frame of a scientist. The scientist is a...\nA. Bird\nB. Elephant\nC. Panda\nD. Dog\nAnswer with the option's letter from the given choices directly.",
+        "answer": "C"
+    },
+    {
+        "path": "teddy_bear_times_square.png",
+        "prompt": "\nFind the frame of a teddy bear. Where is this teddy bear?\nA. Times Square\nB. Eiffel Tower\nC. Taj Mahal\nD. Sydney Opera House\nAnswer with the option's letter from the given choices directly.",
+        "answer": "A"
+    }
+]

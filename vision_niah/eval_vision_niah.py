@@ -18,6 +18,7 @@ import seaborn as sns
 import pandas as pd
 from pathlib import Path
 import random
+import json
 from datasets import load_dataset
 from easy_context import (
     prepare_seq_parallel_inputs,
@@ -43,17 +44,14 @@ prompt_templates = {
     "llama3": {
         "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n",
         "postprompt": "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-        "answer" : "Green"
     },
     "qwen2": {
         "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n",
         "postprompt": "<|im_end|>\n<|im_start|>assistant\n",
-        "answer" : "Green"
     }, 
     "yi": {
         "preprompt": "<|im_start|>system\nAnswer the questions.<|im_end|>\n<|im_start|>user\n",
         "postprompt": "<|im_end|>\n<|im_start|>assistant\n",
-        "answer" : "Green"
     },
 }
 # \nAnswer the question using a single word or phrase.
@@ -169,7 +167,7 @@ def load_text_embeddings(str, tokenizer, model, accelerator, replace_double_newl
         embeddings = model.model.embed_tokens(token_ids)
     return embeddings.to(torch.bfloat16)
 
-def main(args):
+def inference(args):
     model = args.model
     tokenizer = AutoTokenizer.from_pretrained(
         args.model,
@@ -245,54 +243,100 @@ def main(args):
             if accelerator.is_main_process:
                 result = {
                     "Num. Frame": num_frames,
-                    "Document Depth": round(depth * 100, -1),
+                    "Frame Depth": round(depth * 100, -1),
                     "Score": sum(accuracies) / len(accuracies),
                 }
                 accelerator.print(result)
                 all_accuries.append(result)
     if accelerator.is_main_process:
-        df = pd.DataFrame(all_accuries)
-        cmap = LinearSegmentedColormap.from_list(
-            "custom_cmap", ["#F0496E", "#EBB839", "#0CD79F"]
-        )
-
-        pivot_table = pd.pivot_table(
-            df,
-            values="Score",
-            index=["Document Depth", "Num. Frame"],
-            aggfunc="mean",
-        ).reset_index()  # This will aggregate
-        pivot_table = pivot_table.pivot(
-            index="Document Depth", columns="Num. Frame", values="Score"
-        )
-        # Create the heatmap with better aesthetics
-        plt.figure(figsize=(17.5, 8))  # Can adjust these dimensions as needed
-        sns.heatmap(
-            pivot_table,
-            # annot=True,
-            fmt="g",
-            cmap=cmap,
-            cbar_kws={"label": "Score"},
-        )
-
-        # More aesthetics
-        plt.xlabel("Token Limit")  # X-axis label
-        plt.ylabel("Depth Percent")  # Y-axis label
-        plt.xticks(rotation=45)  # Rotates the x-axis labels to prevent overlap
-        plt.yticks(rotation=0)  # Ensures the y-axis labels are horizontal
-        plt.tight_layout()  # Fits everything neatly into the figure area
-        # save
         model_name = args.model.split("/")[-1]
-        # mkdir if not exist
-        os.makedirs("vision_niah/niah_output/{}".format(args.prompt_template), exist_ok=True)
-        plt.savefig(f"vision_niah/niah_output/{args.prompt_template}/heatmap_{model_name}.png".format(model_name))
+        os.makedirs(f"vision_niah/niah_output/{model_name}", exist_ok=True)
+        # save all_accuries as json
+        with open(f"vision_niah/niah_output/{model_name}/all_accuracies.json", "w") as f:
+            json.dump(all_accuries, f, indent=4)
+    return all_accuries, accelerator
+
+
+def plot(args,  all_accuries):
+    df = pd.DataFrame(all_accuries)
+    cmap = LinearSegmentedColormap.from_list(
+        "custom_cmap", ["#F0496E", "#EBB839", "#9ad5b3"]
+    )
+
+    pivot_table = pd.pivot_table(
+        df,
+        values="Score",
+        index=["Frame Depth", "Num. Frame"],
+        aggfunc="mean",
+    ).reset_index()  # This will aggregate
+    pivot_table = pivot_table.pivot(
+        index="Frame Depth", columns="Num. Frame", values="Score"
+    )
+    # Create the heatmap with better aesthetics
+    plt.figure(figsize=(17.5, 8))  # Can adjust these dimensions as needed
+    ax = sns.heatmap(
+        pivot_table,
+        # annot=True,
+        fmt="g",
+        vmin=0,
+        vmax=1,
+        linecolor='white',
+        linewidths=1.5, 
+        cmap=cmap,
+        cbar_kws={"label": "Score"},
+    )
+    
+    # Set the color bar label font size
+    cbar = ax.collections[0].colorbar
+    cbar.ax.yaxis.label.set_size(14)
+    cbar.ax.tick_params(labelsize=14)
+
+    
+    # Define the formatter function
+    def thousands_formatter(x, pos):
+        if x >= 1000:
+            return f'{int(x/1000)}K'
+        return f'{x}'
+
+    context_lengths = pivot_table.columns
+    formatted_context_lengths = [thousands_formatter(x, None) for x in context_lengths]
+
+    # More aesthetics
+    plt.xlabel("Token Limit", fontsize=14)  # X-axis label
+    plt.ylabel("Depth Percent", fontsize=14)  # Y-axis label
+    plt.xticks(ticks=[i + 0.5 for i in range(len(context_lengths))], labels=formatted_context_lengths, rotation=45, fontsize=14)
+    # plt.xticks(rotation=45, fontsize=14)  # Rotates the x-axis labels to prevent overlap
+    plt.yticks(rotation=0, fontsize=14)  # Ensures the y-axis labels are horizontal
+    plt.tight_layout()  # Fits everything neatly into the figure area
+    # save
+    model_name = args.model.split("/")[-1]
+
+    plt.savefig(f"vision_niah/niah_output/{model_name}/heatmap.png")
+    # calculate average accuracy
+    average_accuracy = df["Score"].mean()
+    print(f"Average Accuracy: {average_accuracy}")
+    # save as txt
+    with open(f"vision_niah/niah_output/{model_name}/avg_accuracy.txt", "w") as f:
+        f.write(f"Average Accuracy: {average_accuracy}\n")
+        
+def main(args):
+    if args.plot_only:
+        # load all_accuracies from json
+        model_name = args.model.split("/")[-1]
+        with open(f"vision_niah/niah_output/{model_name}/all_accuracies.json", "r") as f:
+            all_accuracies = json.load(f)
+        plot(args, all_accuracies)
+    else:
+        all_accuracies, accelerator = inference(args)
+        if accelerator.is_main_process:
+            plot(args, all_accuracies)
 
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-32K")
     args.add_argument("--max_frame_num", type=int, default=300)
-    args.add_argument("--needle_dataset", type=str, default="LongVa/needles")
+    args.add_argument("--needle_dataset", type=str, default="LongVa/longva_needles2")
     args.add_argument("--min_frame_num", type=int, default=20)
     args.add_argument("--frame_interval", type=int, default=20)
     args.add_argument("--depth_interval", type=float, default=0.1)
@@ -302,5 +346,6 @@ if __name__ == "__main__":
     args.add_argument("--needle_embedding_dir", type=str, default="vision_niah/data/needle_embeddings")
     args.add_argument("--prompt_template", type=str)
     args.add_argument("--replace_double_newline", action="store_true")
+    args.add_argument("--plot_only", action="store_true")
     
     main(args.parse_args())

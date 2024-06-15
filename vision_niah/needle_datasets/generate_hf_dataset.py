@@ -119,4 +119,4 @@ if __name__ == "__main__":
     data = load_dataset(
         "needle_datasets/generate_hf_dataset.py",
     )
-    data.push_to_hub("LongVa/needles", private=False)
+    data.push_to_hub("LongVa/longva_needles", private=False)
