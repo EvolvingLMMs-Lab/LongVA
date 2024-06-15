@@ -295,14 +295,14 @@ def plot(args,  all_accuries):
     # Define the formatter function
     def thousands_formatter(x, pos):
         if x >= 1000:
-            return f'{int(x/1000)}K'
+            return f'{x/1000:.1f}K'
         return f'{x}'
 
     context_lengths = pivot_table.columns
     formatted_context_lengths = [thousands_formatter(x, None) for x in context_lengths]
 
     # More aesthetics
-    plt.xlabel("Token Limit", fontsize=14)  # X-axis label
+    plt.xlabel("Num. of Frames", fontsize=14)  # X-axis label
     plt.ylabel("Depth Percent", fontsize=14)  # Y-axis label
     plt.xticks(ticks=[i + 0.5 for i in range(len(context_lengths))], labels=formatted_context_lengths, rotation=45, fontsize=14)
     # plt.xticks(rotation=45, fontsize=14)  # Rotates the x-axis labels to prevent overlap

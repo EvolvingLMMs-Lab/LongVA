@@ -139,9 +139,17 @@ def construct_prompt(
     tokenized_distractor_list,
     depth,
 ):
-    # insert the needle into depth of the haystack
     period_tokens = [29889, 869]
     prompt = tokenized_haystack[:context_length]
+    # insert distractors
+    for distractor in tokenized_distractor_list:
+        start_index = np.random.randint(0, len(prompt))
+        for i in range(start_index, len(prompt)):
+            if prompt[i] in period_tokens:
+                start_index = i + 1
+                break
+        prompt = prompt[:start_index] + distractor + prompt[start_index:]
+    # insert the needle into depth of the haystack
     if depth == 0:
         start_index = 0
     else:
@@ -152,14 +160,7 @@ def construct_prompt(
                 start_index = i + 1
                 break
     prompt = prompt[:start_index] + tokenized_needle + prompt[start_index:]
-    # insert distractors
-    for distractor in tokenized_distractor_list:
-        start_index = np.random.randint(0, len(prompt))
-        for i in range(start_index, len(prompt)):
-            if prompt[i] in period_tokens:
-                start_index = i + 1
-                break
-        prompt = prompt[:start_index] + distractor + prompt[start_index:]
+    
     prompt = tokenized_prefix + prompt + tokenized_postfix
     # from transformers import AutoTokenizer
     # tk = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
