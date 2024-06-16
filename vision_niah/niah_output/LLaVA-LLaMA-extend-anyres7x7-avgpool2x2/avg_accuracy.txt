@@ -1,0 +1,1 @@
+Average Accuracy: 0.25777777777777783

@@ -39,8 +39,26 @@ DISTRACTOR_LIST = ["\nThe special magic New York number is: {}.\n", \
     "\nThe special magic Tokyo number is: {}.\n",
     "\nThe special magic Beijing number is: {}.\n",
     "\nThe special magic Berlin number is: {}.\n",]
-PREFIX = "This is a very long story book: <book>"
-QUESTION_STR = "</book>.\n Based on the content of the book, Question: What is the special magic Singapore number? Answer: The special magic Singapore number is: "
+
+
+prompt_templates = {
+    "mistral": {
+        "preprompt": "<s>[INST]This is a very long story book: <book>",
+        "postprompt": "</book>.\nBased on the content of the book, Question: What is the special magic Singapore number?[/INST]The special magic Singapore number is: "
+    },
+    "vicuna": {
+        "preprompt": "<s>A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions. USER: This is a very long story book: <book>",
+        "postprompt": "</book>.\nBased on the content of the book, Question: What is the special magic Singapore number? ASSISTANT: The special magic Singapore number is:"
+    },
+    "llama3": {
+        "preprompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThis is a very long story book: <book>",
+        "postprompt": "</book>.\nBased on the content of the book, Question: What is the special magic Singapore number?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nThe special magic Singapore number is: ",
+    },
+    "qwen2": {
+        "preprompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\nThis is a very long story book: <book>",
+        "postprompt": "</book>.\nBased on the content of the book, Question: What is the special magic Singapore number?<|im_end|>\n<|im_start|>assistant\nThe special magic Singapore number is: ",
+    }, 
+}
 
 
 def safe_tokenize(tokenizer, text):
@@ -202,7 +220,7 @@ def inference(args):
     # remember to remove <s>
     accelerator.print("Preparing Haystack...")
     tokenized_haystack = load_haystack(args, accelerator, tokenizer)
-    tokenized_prefix = tokenizer.encode(PREFIX)
+    tokenized_prefix = tokenizer.encode(prompt_templates[args.prompt_template]["preprompt"])
 
     accelerator.print("Starting Evaluation...")
     random_number_list = [
@@ -232,7 +250,7 @@ def inference(args):
             accuracies = []
             for random_number in random_number_list:
                 needle_str = NEEDLE_FORMAT.format(random_number)
-                question_str = QUESTION_STR
+                question_str = prompt_templates[args.prompt_template]["postprompt"]
                 asnwer_str = str(random_number)
 
                 tokenized_needle = safe_tokenize(tokenizer,needle_str)
@@ -361,5 +379,6 @@ if __name__ == "__main__":
     args.add_argument("--rnd_number_digits", type=int, default=7)
     args.add_argument("--haystack_dir", type=str, default=None)
     args.add_argument("--num_distractor", type=int, default=0)
+    args.add_argument("--prompt_template", type=str)
     args.add_argument("--plot_only", action="store_true")
     main(args.parse_args())
