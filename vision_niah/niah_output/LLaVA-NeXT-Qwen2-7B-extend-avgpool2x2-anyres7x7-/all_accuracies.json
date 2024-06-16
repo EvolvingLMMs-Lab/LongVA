@@ -127,15 +127,15 @@
     {
         "Num. Frame": 1000,
         "Frame Depth": 20.0,
-        "Score": 0.8
-    },
-    {
-        "Num. Frame": 1000,
-        "Frame Depth": 40.0,
         "Score": 1.0
     },
     {
         "Num. Frame": 1000,
+        "Frame Depth": 40.0,
+        "Score": 1.0
+    },
+    {
+        "Num. Frame": 1000,
         "Frame Depth": 60.0,
         "Score": 1.0
     },
@@ -157,25 +157,25 @@
     {
         "Num. Frame": 1200,
         "Frame Depth": 20.0,
-        "Score": 0.6
-    },
-    {
-        "Num. Frame": 1200,
-        "Frame Depth": 40.0,
-        "Score": 0.6
-    },
-    {
-        "Num. Frame": 1200,
-        "Frame Depth": 60.0,
-        "Score": 0.8
-    },
-    {
-        "Num. Frame": 1200,
-        "Frame Depth": 80.0,
         "Score": 1.0
     },
     {
         "Num. Frame": 1200,
+        "Frame Depth": 40.0,
+        "Score": 1.0
+    },
+    {
+        "Num. Frame": 1200,
+        "Frame Depth": 60.0,
+        "Score": 1.0
+    },
+    {
+        "Num. Frame": 1200,
+        "Frame Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Num. Frame": 1200,
         "Frame Depth": 100.0,
         "Score": 1.0
     },
@@ -187,22 +187,22 @@
     {
         "Num. Frame": 1400,
         "Frame Depth": 20.0,
-        "Score": 0.2
+        "Score": 0.6
     },
     {
         "Num. Frame": 1400,
         "Frame Depth": 40.0,
-        "Score": 0.6
+        "Score": 1.0
     },
     {
         "Num. Frame": 1400,
         "Frame Depth": 60.0,
-        "Score": 0.6
+        "Score": 1.0
     },
     {
         "Num. Frame": 1400,
         "Frame Depth": 80.0,
-        "Score": 0.6
+        "Score": 1.0
     },
     {
         "Num. Frame": 1400,
@@ -217,22 +217,22 @@
     {
         "Num. Frame": 1600,
         "Frame Depth": 20.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 1600,
         "Frame Depth": 40.0,
-        "Score": 0.4
+        "Score": 0.8
     },
     {
         "Num. Frame": 1600,
         "Frame Depth": 60.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 1600,
         "Frame Depth": 80.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 1600,
@@ -247,22 +247,22 @@
     {
         "Num. Frame": 1800,
         "Frame Depth": 20.0,
-        "Score": 0.2
+        "Score": 1.0
     },
     {
         "Num. Frame": 1800,
         "Frame Depth": 40.0,
-        "Score": 0.6
+        "Score": 1.0
     },
     {
         "Num. Frame": 1800,
         "Frame Depth": 60.0,
-        "Score": 0.8
+        "Score": 0.6
     },
     {
         "Num. Frame": 1800,
         "Frame Depth": 80.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 1800,
@@ -277,12 +277,12 @@
     {
         "Num. Frame": 2000,
         "Frame Depth": 20.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2000,
         "Frame Depth": 40.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2000,
@@ -292,7 +292,7 @@
     {
         "Num. Frame": 2000,
         "Frame Depth": 80.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2000,
@@ -302,47 +302,47 @@
     {
         "Num. Frame": 2200,
         "Frame Depth": 0.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2200,
         "Frame Depth": 20.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2200,
         "Frame Depth": 40.0,
-        "Score": 0.4
+        "Score": 0.6
     },
     {
         "Num. Frame": 2200,
         "Frame Depth": 60.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2200,
         "Frame Depth": 80.0,
-        "Score": 0.4
+        "Score": 1.0
     },
     {
         "Num. Frame": 2200,
         "Frame Depth": 100.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2400,
         "Frame Depth": 0.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2400,
         "Frame Depth": 20.0,
-        "Score": 0.6
+        "Score": 0.4
     },
     {
         "Num. Frame": 2400,
         "Frame Depth": 40.0,
-        "Score": 0.6
+        "Score": 0.4
     },
     {
         "Num. Frame": 2400,
@@ -357,17 +357,17 @@
     {
         "Num. Frame": 2400,
         "Frame Depth": 100.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2600,
         "Frame Depth": 0.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2600,
         "Frame Depth": 20.0,
-        "Score": 0.4
+        "Score": 0.8
     },
     {
         "Num. Frame": 2600,
@@ -377,7 +377,7 @@
     {
         "Num. Frame": 2600,
         "Frame Depth": 60.0,
-        "Score": 0.4
+        "Score": 0.8
     },
     {
         "Num. Frame": 2600,
@@ -387,27 +387,27 @@
     {
         "Num. Frame": 2600,
         "Frame Depth": 100.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2800,
         "Frame Depth": 0.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 2800,
         "Frame Depth": 20.0,
-        "Score": 0.6
+        "Score": 0.8
     },
     {
         "Num. Frame": 2800,
         "Frame Depth": 40.0,
-        "Score": 0.4
+        "Score": 0.6
     },
     {
         "Num. Frame": 2800,
         "Frame Depth": 60.0,
-        "Score": 0.4
+        "Score": 0.6
     },
     {
         "Num. Frame": 2800,
@@ -417,12 +417,12 @@
     {
         "Num. Frame": 2800,
         "Frame Depth": 100.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 3000,
         "Frame Depth": 0.0,
-        "Score": 0.8
+        "Score": 1.0
     },
     {
         "Num. Frame": 3000,
@@ -432,21 +432,21 @@
     {
         "Num. Frame": 3000,
         "Frame Depth": 40.0,
-        "Score": 0.6
+        "Score": 0.8
     },
     {
         "Num. Frame": 3000,
         "Frame Depth": 60.0,
-        "Score": 0.6
+        "Score": 0.8
     },
     {
         "Num. Frame": 3000,
         "Frame Depth": 80.0,
-        "Score": 0.6
+        "Score": 0.4
     },
     {
         "Num. Frame": 3000,
         "Frame Depth": 100.0,
-        "Score": 0.8
+        "Score": 1.0
     }
 ]
