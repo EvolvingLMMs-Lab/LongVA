@@ -12,4 +12,4 @@ for model_name, model_classes in AVAILABLE_MODELS.items():
         exec(f"from .language_model.{model_name} import {model_classes}")
     except Exception as e:
         raise e
-        print(f"Failed to import {model_name} from llava.language_model.{model_name}")
+        print(f"Failed to import {model_name} from longva.language_model.{model_name}")

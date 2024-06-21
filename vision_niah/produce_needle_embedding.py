@@ -1,6 +1,6 @@
 
-from llava.model.builder import load_pretrained_model
-from llava.mm_utils import tokenizer_image_token, get_model_name_from_path
+from longva.model.builder import load_pretrained_model
+from longva.mm_utils import tokenizer_image_token, get_model_name_from_path
 import json
 import argparse
 import numpy as np
@@ -9,7 +9,7 @@ import torch
 from pathlib import Path
 from PIL import Image
 from datasets import load_dataset
-from llava.mm_utils import  process_images
+from longva.mm_utils import  process_images
 import math
 def main(args):
     model_name = "llava_qwen"

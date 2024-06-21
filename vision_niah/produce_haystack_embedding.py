@@ -1,12 +1,12 @@
 
-from llava.model.builder import load_pretrained_model
-from llava.mm_utils import tokenizer_image_token, get_model_name_from_path
+from longva.model.builder import load_pretrained_model
+from longva.mm_utils import tokenizer_image_token, get_model_name_from_path
 from decord import VideoReader, cpu
 import argparse
 import numpy as np
 from tqdm import tqdm
 import torch
-from llava.mm_utils import  process_images
+from longva.mm_utils import  process_images
 import math
 from PIL import Image
 def load_video_batches(video_path, batch_size):
