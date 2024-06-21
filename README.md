@@ -26,12 +26,13 @@ pip install -r requirements.txt
 ## Local Demo
 
 ```bash
+# Running video and image demo
 python local_demo/longva_demo.py
 ```
 
 ## V-NIAH Evaluation
 ```bash
-#download the model weights
+# Download the model weights
 huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
