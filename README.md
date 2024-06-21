@@ -85,6 +85,6 @@ Coming soon...
 ## Citation
 
 ## Acknowledgement
-LLaVA: the codebase we built upon. 
-LMMs-Eval: the codebase we used for evaluation. 
+- LLaVA: the codebase we built upon. 
+- LMMs-Eval: the codebase we used for evaluation. 
 
