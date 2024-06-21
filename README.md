@@ -25,6 +25,10 @@ pip install -r requirements.txt
 
 ## Local Demo
 
+```bash
+python local_demo/longva_demo.py
+```
+
 ## V-NIAH Evaluation
 ```bash
 #download the model weights
