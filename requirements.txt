@@ -1,4 +1,5 @@
 accelerate>=0.28.0
+decord>=0.6.0
 datasets>=2.18.0
 evaluate>=0.4.1
 tqdm
@@ -14,3 +15,4 @@ wandb
 seaborn
 pandas
 pytest
+loguru
