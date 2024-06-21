@@ -26,8 +26,12 @@ pip install -r requirements.txt
 ## Local Demo
 
 ```bash
-# Running video and image demo
-python local_demo/longva_demo.py
+# For CLI inference, please refer to this video and image demo
+python local_demo/longva_backend.py
+
+# For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
+# make sure your gradio has been updated with new features, if not, please `pip install -U gradio`
+python local_demo/multimodal_chat.py
 ```
 
 ## V-NIAH Evaluation
