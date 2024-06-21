@@ -1,4 +1,4 @@
-# LongVA: Long Vision Assistant From Long Language Model
+# LongVA: Long Context Transfer From Language To Vision
 
 ## Local Demo
 
