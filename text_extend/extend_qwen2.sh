@@ -1,5 +1,5 @@
 accelerate launch \
---config_file  accelerate_configs/single_node.yaml \
+--config_file  easy_context/accelerate_configs/single_node.yaml \
 text_extend/text_extend_train.py \
 --batch-size 1 \
 --gradient-accumulate-every 4 \

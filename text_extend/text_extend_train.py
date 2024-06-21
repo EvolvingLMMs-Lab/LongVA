@@ -95,7 +95,7 @@ def main(args):
         batch_size=args.batch_size,
     )
     if args.learning_rate != 1e-5:
-        accelerator.print(f"Warning: You also need to modify accelerate_configs/zero3_offload.json to change the learning rate")
+        accelerator.print(f"Warning: You also need to modify easy_context/accelerate_configs/zero3_offload.json to change the learning rate")
     optim = DummyOptim(model.parameters(), lr=args.learning_rate)
     scheduler = DummyScheduler(
         optim,
