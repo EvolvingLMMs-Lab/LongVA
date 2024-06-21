@@ -17,7 +17,7 @@ LongVA  can process up to 2000 frames or over 200K visual tokens. It achieves st
 This codebase is tested on CUDA 11.8 and A100-SXM.
 ```
 conda create -n longva python=3.10 -y && conda activate longva
-cd longva && pip install .[train] && cd ..
+pip install -e "longva/.[train]"
 pip install packaging &&  pip install ninja && pip install flash-attn --no-build-isolation --no-cache-dir
 pip install -r requirements.txt
 ```
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ## V-NIAH Evaluation
 ```bash
 #download the model weights
-huggingface-cli download LongVa/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
+huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
 Results will be saved to vision_niah/niah_output
@@ -46,5 +46,5 @@ Results will be saved to vision_niah/niah_output
 ## Acknowledgement
 ```
 LLaVA: the codebase we built upon. Thanks for their wonderful work.
-
+LMMs-Eval: the codebase we used for evaluation. Thanks for their wonderful work.
 ```
