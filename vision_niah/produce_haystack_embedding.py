@@ -23,7 +23,7 @@ def load_video_batches(video_path, batch_size):
 def main(args):
     video_path = args.video_path
     model_path = args.model
-    model_name = get_model_name_from_path(model_path)
+    model_name = "llava_qwen"
     
     tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, None, model_name, load_8bit=False,device_map="cuda:0")
     del model.model.layers

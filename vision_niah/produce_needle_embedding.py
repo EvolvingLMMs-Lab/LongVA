@@ -12,7 +12,7 @@ from datasets import load_dataset
 from llava.mm_utils import  process_images
 import math
 def main(args):
-    model_name = get_model_name_from_path(args.model)
+    model_name = "llava_qwen"
     tokenizer, model, image_processor, context_len = load_pretrained_model(args.model, None, model_name, load_8bit=False,device_map="cuda:0")
     model.config.image_aspect_ratio = "pad"
     model.config.mm_patch_merge_type="flat"

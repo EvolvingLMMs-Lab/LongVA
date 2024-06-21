@@ -180,7 +180,7 @@ def inference(args):
         mixed_precision="bf16",
     )
     kwargs = {"rope_theta": args.rope_theta} if args.rope_theta is not None else {}
-    if "qwen2" in args.model.lower():
+    if "qwen2" in args.model.lower() or "longva" in args.model.lower():
         model = Qwen2ForCausalLM_RingAttn.from_pretrained(
             args.model,
             torch_dtype=torch.bfloat16,
