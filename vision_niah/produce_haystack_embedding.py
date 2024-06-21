@@ -40,6 +40,7 @@ def main(args):
             images = [Image.fromarray(frame).convert("RGB") for frame in video_batch]
             processed_images = process_images(images, image_processor,model.config).half()
             image_features = model.encode_images(processed_images)
+            print(image_features.shape)
             if args.pooling_size != 0:
                 B, _, F = image_features.shape
                 

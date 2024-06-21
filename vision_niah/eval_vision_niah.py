@@ -35,7 +35,7 @@ np.random.seed(SEED)
 prompt_templates = {
     "mistral": {
         "preprompt": "<s>[INST]",
-        "postprompt": "[/INST]"
+        "postprompt": " [/INST]"
     },
     "vicuna": {
         "preprompt": "<s>A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions. USER:",
@@ -83,6 +83,7 @@ def eval_forward(accelerator, model, input_embeds, answer_embeds, pad_id, answer
     position_ids = (
         torch.arange(input_embeds.shape[1]).unsqueeze(0).expand(input_embeds.shape[0], -1)
     ).to(accelerator.device)
+    accelerator.print(input_embeds.shape)
     prepared = prepare_seq_parallel_inputs(
         "zigzag_ring_attn",
         input_embeds,
@@ -250,9 +251,9 @@ def inference(args):
                 all_accuries.append(result)
     if accelerator.is_main_process:
         model_name = args.model.split("/")[-1]
-        os.makedirs(f"vision_niah/niah_output/{model_name}", exist_ok=True)
+        os.makedirs(f"{args.output_path}/{model_name}", exist_ok=True)
         # save all_accuries as json
-        with open(f"vision_niah/niah_output/{model_name}/all_accuracies.json", "w") as f:
+        with open(f"{args.output_path}/{model_name}/all_accuracies.json", "w") as f:
             json.dump(all_accuries, f, indent=4)
     return all_accuries, accelerator
 
@@ -311,19 +312,19 @@ def plot(args,  all_accuries):
     # save
     model_name = args.model.split("/")[-1]
 
-    plt.savefig(f"vision_niah/niah_output/{model_name}/heatmap.png")
+    plt.savefig(f"{args.output_path}/{model_name}/heatmap.png")
     # calculate average accuracy
     average_accuracy = df["Score"].mean()
     print(f"Average Accuracy: {average_accuracy}")
     # save as txt
-    with open(f"vision_niah/niah_output/{model_name}/avg_accuracy.txt", "w") as f:
+    with open(f"{args.output_path}/{model_name}/avg_accuracy.txt", "w") as f:
         f.write(f"Average Accuracy: {average_accuracy}\n")
         
 def main(args):
     if args.plot_only:
         # load all_accuracies from json
         model_name = args.model.split("/")[-1]
-        with open(f"vision_niah/niah_output/{model_name}/all_accuracies.json", "r") as f:
+        with open(f"{args.output_path}/{model_name}/all_accuracies.json", "r") as f:
             all_accuracies = json.load(f)
         plot(args, all_accuracies)
     else:
@@ -339,6 +340,7 @@ if __name__ == "__main__":
     args.add_argument("--needle_dataset", type=str, default="LongVa/longva_needles2")
     args.add_argument("--min_frame_num", type=int, default=20)
     args.add_argument("--frame_interval", type=int, default=20)
+    args.add_argument("--output_path", type=str, default="vision_niah/niah_output")
     args.add_argument("--depth_interval", type=float, default=0.1)
     args.add_argument("--num_samples", type=int, default=1)
     args.add_argument("--rope_theta", type=float, default=None)

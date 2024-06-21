@@ -6,7 +6,17 @@
     },
     {
         "Context Length": 32000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 32000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 32000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -16,7 +26,17 @@
     },
     {
         "Context Length": 32000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 32000,
         "Document Depth": 60.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 32000,
+        "Document Depth": 70.0,
         "Score": 1.0
     },
     {
@@ -26,6 +46,11 @@
     },
     {
         "Context Length": 32000,
+        "Document Depth": 90.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 32000,
         "Document Depth": 100.0,
         "Score": 1.0
     },
@@ -36,7 +61,17 @@
     },
     {
         "Context Length": 64000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 64000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 64000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -46,12 +81,27 @@
     },
     {
         "Context Length": 64000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 64000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 64000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 64000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 64000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -66,7 +116,17 @@
     },
     {
         "Context Length": 96000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 96000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 96000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -76,12 +136,27 @@
     },
     {
         "Context Length": 96000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 96000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 96000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 96000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 96000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -96,7 +171,17 @@
     },
     {
         "Context Length": 128000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 128000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 128000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -106,12 +191,27 @@
     },
     {
         "Context Length": 128000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 128000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 128000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 128000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 128000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -126,7 +226,17 @@
     },
     {
         "Context Length": 160000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 160000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 160000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -136,12 +246,27 @@
     },
     {
         "Context Length": 160000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 160000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 160000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 160000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 160000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -156,7 +281,17 @@
     },
     {
         "Context Length": 192000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 192000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 192000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -166,12 +301,27 @@
     },
     {
         "Context Length": 192000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 192000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 192000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 192000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 192000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -186,7 +336,17 @@
     },
     {
         "Context Length": 224000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 224000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 224000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -196,12 +356,27 @@
     },
     {
         "Context Length": 224000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 224000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 224000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 224000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 224000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -216,7 +391,17 @@
     },
     {
         "Context Length": 256000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 256000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 256000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -226,12 +411,27 @@
     },
     {
         "Context Length": 256000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 256000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 256000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 256000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 256000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -246,7 +446,17 @@
     },
     {
         "Context Length": 288000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 288000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 288000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -256,12 +466,27 @@
     },
     {
         "Context Length": 288000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 288000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 288000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 288000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 288000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -276,7 +501,17 @@
     },
     {
         "Context Length": 320000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 320000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 320000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -286,12 +521,27 @@
     },
     {
         "Context Length": 320000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 320000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 320000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 320000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 320000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -306,7 +556,17 @@
     },
     {
         "Context Length": 352000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 352000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 352000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -316,12 +576,27 @@
     },
     {
         "Context Length": 352000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 352000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 352000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 352000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 352000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -336,7 +611,17 @@
     },
     {
         "Context Length": 384000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 384000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 384000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -346,12 +631,27 @@
     },
     {
         "Context Length": 384000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 384000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 384000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 384000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 384000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -366,7 +666,17 @@
     },
     {
         "Context Length": 416000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 416000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 416000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -376,12 +686,27 @@
     },
     {
         "Context Length": 416000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 416000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 416000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 416000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 416000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -396,7 +721,17 @@
     },
     {
         "Context Length": 448000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 448000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 448000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -406,12 +741,27 @@
     },
     {
         "Context Length": 448000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 448000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 448000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 448000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 448000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -426,7 +776,17 @@
     },
     {
         "Context Length": 480000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 480000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 480000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -436,12 +796,27 @@
     },
     {
         "Context Length": 480000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 480000,
         "Document Depth": 60.0,
         "Score": 1.0
     },
     {
         "Context Length": 480000,
+        "Document Depth": 70.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 480000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 480000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
@@ -456,7 +831,17 @@
     },
     {
         "Context Length": 512000,
+        "Document Depth": 10.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 512000,
         "Document Depth": 20.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 512000,
+        "Document Depth": 30.0,
         "Score": 1.0
     },
     {
@@ -466,12 +851,27 @@
     },
     {
         "Context Length": 512000,
+        "Document Depth": 50.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 512000,
         "Document Depth": 60.0,
-        "Score": 0.6666666666666666
+        "Score": 0.8
+    },
+    {
+        "Context Length": 512000,
+        "Document Depth": 70.0,
+        "Score": 0.8
     },
     {
         "Context Length": 512000,
         "Document Depth": 80.0,
+        "Score": 1.0
+    },
+    {
+        "Context Length": 512000,
+        "Document Depth": 90.0,
         "Score": 1.0
     },
     {
