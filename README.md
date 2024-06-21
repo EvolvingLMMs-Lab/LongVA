@@ -33,8 +33,33 @@ sh vision_niah/eval.sh
 ```
 Results will be saved to vision_niah/niah_output
 ## LMMs-Eval Evaluation
+We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` you can install longva using
+```bash
+cd longva
+pip install -e ".[train]"
 ```
+Then you can use the following script to evaluate on both image and video tasks
 
+```bash
+## Image eval example
+accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
+    --model longva \
+    --model_args pretrained=lmms-lab/LongVA-7B,conv_template=qwen_1_5,model_name=llava_qwen \
+    --tasks mme \
+    --batch_size 1 \
+    --log_samples \
+    --log_samples_suffix mme_longva \
+    --output_path ./logs/
+
+## Video eval example
+accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
+    --model longva \
+    --model_args pretrained=lmms-lab/LongVA-7B,conv_template=qwen_1_5,video_decode_backend=decord,max_frames_num=32,model_name=llava_qwen \
+    --tasks videomme \
+    --batch_size 1 \
+    --log_samples \
+    --log_samples_suffix videomme_longva \
+    --output_path ./logs/ 
 ```
 
 ## Long Text Training
