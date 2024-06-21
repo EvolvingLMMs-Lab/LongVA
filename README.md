@@ -84,6 +84,17 @@ huggingface-cli download
 Coming soon...
 ## Citation
 
+If you find this work useful, please consider citing our paper:
+```
+@misc{zhang2024longva,
+    title={LongVA: Long Context Transfer from Language to Vision},
+    url={https://lmms-lab.github.io/posts/longva/},
+    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Li, Chunyuan and Liu, Ziwei},
+    month={June},
+    year={2024}
+}
+```
+
 ## Acknowledgement
 - LLaVA: the codebase we built upon. 
 - LMMs-Eval: the codebase we used for evaluation. 
