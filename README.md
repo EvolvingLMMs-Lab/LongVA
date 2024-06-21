@@ -1,6 +1,6 @@
 # LongVA & V-NIAH
 <p align="center">
-    <img src="vision_niah/niah_output/LongVA-7B/heatmap.png" width="500">
+    <img src="vision_niah/niah_output/LongVA-7B/heatmap.png" width="800">
 </p>
 
 <p align="center">
