@@ -250,7 +250,7 @@ class LlavaMetaForCausalLM(ABC):
                         # Assume 2*2 patches
                         # After this, [2,2, 24,24, 4096]
                         kernel_size = mm_patch_merge_type.split("avgpool")[-1].split("x")[-1]
-                        kernel_size = int(kernel_size)
+                        kernel_size = 2
                         image_feature = image_feature.view(num_patch_height * num_patch_width, height, width, -1) # [4, 24, 24, 4096]
                         image_feature = image_feature.permute(0, 3, 1, 2).contiguous() # [4, 4096, 24, 24]
                         image_feature = nn.functional.avg_pool2d(image_feature, kernel_size) # [4, 4096, 12, 12]
@@ -263,6 +263,7 @@ class LlavaMetaForCausalLM(ABC):
                         image_feature = image_feature[0]
                         # rank0_print(f"After here : {image_feature.shape}")
                     new_image_features.append(image_feature)
+
                 image_features = new_image_features
             elif mm_patch_merge_type.startswith("spatial"):
                 new_image_features = []
@@ -340,7 +341,17 @@ class LlavaMetaForCausalLM(ABC):
             else:
                 raise ValueError(f"Unexpected mm_patch_merge_type: {self.config.mm_patch_merge_type}")
         else:
-            image_features = self.encode_images(images)
+            error_message = """
+            Something is wrong with the input shape. Most likely, you did not wrap the image or video input in a list:
+            This is correct:
+                model.generate(input_ids, images=[video_tensor],  modalities=["video"], **gen_kwargs)
+                model.generate(input_ids, images=[image_tensor],  modalities=["image"], **gen_kwargs)
+            This is wrong:
+                model.generate(input_ids, images=video_tensor,  modalities=["video"], **gen_kwargs)
+                model.generate(input_ids, images=image_tensor,  modalities=["image"], **gen_kwargs)
+            """
+            raise ValueError(error_message)
+            # image_features = self.encode_images(images)
 
         # TODO: image start / end is not implemented here to support pretraining.
         if getattr(self.config, "tune_mm_mlp_adapter", False) and getattr(self.config, "mm_use_im_start_end", False):
