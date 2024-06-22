@@ -9,4 +9,5 @@ wandb/
 text_extend/training_output
 vision_niah/model_weights
 **/**.pt
-**/**.mp4
+# **/**.mp4
+longva/build
