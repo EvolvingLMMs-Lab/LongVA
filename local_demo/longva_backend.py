@@ -310,6 +310,9 @@ class LongVA:
         visuals = requests["visuals"]
         context = requests["context"]
         task_type = requests["task_type"]
+        
+        print(f"################# requests ######################\n{requests}")
+        print(f"################# gen_kwargs ######################\n{gen_kwargs}")
 
         if task_type == "text":
             image_tensor = None
@@ -468,7 +471,6 @@ class LongVA:
             ).encode() + b"\0"
             return
 
-        print(f"gen_kwargs: {gen_kwargs}")
         try:
             thread = Thread(
                 target=self.model.generate,

@@ -75,8 +75,9 @@ def http_bot(
             task_type = "text"
         elif visual_count > 1:
             print(f"Visual count: {visual_count}")
+            visuals = state[last_visual_index][0]
             state = state[last_visual_index:]
-            if video_input is not None:
+            if visuals[0].split(".")[-1] in ["mp4", "mov", "avi", "mp3", "wav", "mpga", "mpg", "mpeg"]:
                 task_type = "video"
             else:
                 task_type = "image"
@@ -364,7 +365,13 @@ if __name__ == "__main__":
                 chatbot.like(print_like_dislike, None, None)
 
                 with gr.Row():
-                    gr.ClearButton(chatbot, chat_input, chat_msg, bot_msg)
+                    clear_btn = gr.ClearButton(chatbot, chat_input, chat_msg, bot_msg)
+                    clear_btn.click(
+                        lambda: gr.MultimodalTextbox(interactive=True), None, [chat_input]
+                    ).then(
+                        lambda: video, None, [video]
+                    )
+                    
                     submit_btn = gr.Button("Send", chat_msg)
                     submit_btn.click(
                         add_message, [chatbot, chat_input, video], [chatbot, chat_input]
