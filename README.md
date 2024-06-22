@@ -33,7 +33,11 @@ python local_demo/longva_backend.py
 python local_demo/multimodal_chat.py
 ```
 
-## Usage Example
+### Quick Start With HuggingFace
+
+<details>
+    <summary>Example Code</summary>
+    
 ```python
 from longva.model.builder import load_pretrained_model
 from longva.mm_utils import tokenizer_image_token, process_images
@@ -77,6 +81,9 @@ with torch.inference_mode():
 outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 print(outputs)
 ```
+</details>
+
+
 ## V-NIAH Evaluation
 You need to first download a video longer than 1 hour (we sample frames at 1 fps) as the haystack video and put it at vision_niah/data/long_video.mp4. We do not provide the video because we use an actual movie in our evaluation. We can not provide it due to copyright reasons.
 The can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
