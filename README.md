@@ -26,6 +26,10 @@ pip install -r requirements.txt
 ## Local Demo
 
 ```bash
+# Environment issue
+pip install gradio==4.29.0
+pip install httpx==0.23.3 # manual install httpx==0.23.3 other wise will cause gradio port error
+
 # For CLI inference, please refer to this video and image demo
 python local_demo/longva_backend.py
 
