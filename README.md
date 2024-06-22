@@ -85,19 +85,20 @@ print(outputs)
 
 
 ## V-NIAH Evaluation
-You need to first download a video longer than 1 hour (we sample frames at 1 fps) as the haystack video and put it at vision_niah/data/long_video.mp4. We do not provide the video because we use an actual movie in our evaluation. We can not provide it due to copyright reasons.
-The can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
+To begin, download a video longer than one hour to use as the haystack video and save it at vision_niah/data/long_video.mp4. We cannot provide the video ourselves as we use an actual movie in our evaluation.
+
+You can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
 ```bash
-# Download the model weights
 huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
 Results will be saved to vision_niah/niah_output.
+
 ## LMMs-Eval Evaluation
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` and longva, you can use the following script to evaluate on both image and video tasks
-
+<details>
+    <summary>lmms-eval image evaluation command</summary>
 ```bash
-## Image eval example
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
     --model_args pretrained=lmms-lab/LongVA-7B,conv_template=qwen_1_5,model_name=llava_qwen \
@@ -106,8 +107,12 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --log_samples \
     --log_samples_suffix mme_longva \
     --output_path ./logs/
+```
+</details>
 
-## Video eval example
+<details>
+    <summary>lmms-eval video evaluation command</summary>
+```
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
     --model_args pretrained=lmms-lab/LongVA-7B,conv_template=qwen_1_5,video_decode_backend=decord,max_frames_num=32,model_name=llava_qwen \
@@ -117,6 +122,7 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --log_samples_suffix videomme_longva \
     --output_path ./logs/ 
 ```
+</details>
 
 ## Long Text Training
 ```bash
