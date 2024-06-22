@@ -26,8 +26,12 @@ pip install -r requirements.txt
 ## Local Demo
 
 ```bash
-# Running video and image demo
-python local_demo/longva_demo.py
+# For CLI inference, please refer to this video and image demo
+python local_demo/longva_backend.py
+
+# For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
+# make sure your gradio has been updated with new features, if not, please `pip install -U gradio`
+python local_demo/multimodal_chat.py
 ```
 
 ## V-NIAH Evaluation
@@ -86,7 +90,18 @@ The results will be saved to text_extend/niah_output.
 Coming soon...
 ## Citation
 
+If you find this work useful, please consider citing our paper:
+```
+@misc{zhang2024longva,
+    title={LongVA: Long Context Transfer from Language to Vision},
+    url={https://lmms-lab.github.io/posts/longva/},
+    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Li, Chunyuan and Liu, Ziwei},
+    month={June},
+    year={2024}
+}
+```
+
 ## Acknowledgement
-LLaVA: the codebase we built upon. 
-LMMs-Eval: the codebase we used for evaluation. 
+- LLaVA: the codebase we built upon. 
+- LMMs-Eval: the codebase we used for evaluation. 
 

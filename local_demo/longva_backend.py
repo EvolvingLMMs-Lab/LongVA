@@ -57,7 +57,7 @@ class LongVA:
 
     def __init__(
         self,
-        pretrained: str = "LongVa/LongVA-7B",
+        pretrained: str = "lmms-lab/LongVA-7B-DPO",
         truncation: Optional[bool] = True,
         device: Optional[str] = "cuda:0",
         batch_size: Optional[Union[int, str]] = 1,
