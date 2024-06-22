@@ -353,18 +353,19 @@ conv_llava_llama_2 = Conversation(
     sep2="</s>",
 )
 
-conv_llava_llama_3 = Conversation(
-    system="You are a helpful language and vision assistant. " "You are able to understand the visual content that the user provides, " "and assist the user with a variety of tasks using natural language.",
-    roles=("user", "assistant"),
-    version="llama_v3",
-    messages=[],
-    offset=0,
-    sep="<|eot_id|>",
-    sep_style=SeparatorStyle.LLAMA_3,
-    tokenizer_id="meta-llama/Meta-Llama-3-8B-Instruct",
-    tokenizer=AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct"),
-    stop_token_ids=[128009],
-)
+# This will lead to a bug when user can not access Meta-Llama-3-8B-Instruct
+# conv_llava_llama_3 = Conversation(
+#     system="You are a helpful language and vision assistant. " "You are able to understand the visual content that the user provides, " "and assist the user with a variety of tasks using natural language.",
+#     roles=("user", "assistant"),
+#     version="llama_v3",
+#     messages=[],
+#     offset=0,
+#     sep="<|eot_id|>",
+#     sep_style=SeparatorStyle.LLAMA_3,
+#     tokenizer_id="meta-llama/Meta-Llama-3-8B-Instruct",
+#     tokenizer=AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct"),
+#     stop_token_ids=[128009],
+# )
 
 conv_mistral_instruct = Conversation(
     system="",
@@ -540,7 +541,6 @@ conv_templates = {
     "llava_v1": conv_llava_v1,
     "llava_v1_mmtag": conv_llava_v1_mmtag,
     "llava_llama_2": conv_llava_llama_2,
-    "llava_llama_3": conv_llava_llama_3,
     "llava_llama_2_simple": conv_llava_llama_2_simple,
     "llava_llama_2_mmtag": conv_llava_llama_2_mmtag,
     "llava_mistral_instruct": conv_mistral_instruct,
