@@ -97,7 +97,7 @@ Results will be saved to vision_niah/niah_output.
 ## LMMs-Eval Evaluation
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` and longva, you can use the following script to evaluate on both image and video tasks
 <details>
-    <summary>lmms-eval image evaluation command</summary>
+    <summary>Image evaluation command</summary>
 ```bash
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
@@ -111,7 +111,7 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
 </details>
 
 <details>
-    <summary>lmms-eval video evaluation command</summary>
+    <summary>Video evaluation command</summary>
 ```
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
@@ -122,6 +122,7 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --log_samples_suffix videomme_longva \
     --output_path ./logs/ 
 ```
+
 </details>
 
 ## Long Text Training
@@ -146,9 +147,9 @@ Coming soon...
 If you find this work useful, please consider citing our paper:
 ```
 @misc{zhang2024longva,
-    title={LongVA: Long Context Transfer from Language to Vision},
+    title={Long Context Transfer from Language to Vision},
     url={https://lmms-lab.github.io/posts/longva/},
-    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Li, Chunyuan and Liu, Ziwei},
+    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Wang, Ziyue and Tan, Haoran and Li, Chunyuan and Liu, Ziwei},
     month={June},
     year={2024}
 }
