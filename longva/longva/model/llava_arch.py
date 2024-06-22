@@ -228,13 +228,14 @@ class LlavaMetaForCausalLM(ABC):
             if mm_patch_merge_type == "flat":
                 image_features = [x.flatten(0, 1) for x in image_features]
             
-            elif "long_video" in mm_patch_merge_type:
+            elif mm_patch_merge_type== "unires":
                 new_image_features = []
                 for image_idx, image_feature in enumerate(image_features):
                     # rank0_print(f"Initial feature size : {image_feature.shape}")
                     if image_idx in video_idx_in_batch:  # video operations
                         image_feature = image_feature.flatten(0, 1)
                     elif image_feature.shape[0] > 1:
+                        # base image feature is never used in unires
                         base_image_feature = image_feature[0]
                         image_feature = image_feature[1:]
                         # rank0_print(f"Before pool : {image_feature.shape}")
@@ -248,38 +249,21 @@ class LlavaMetaForCausalLM(ABC):
                         image_feature = image_feature.view(num_patch_height, num_patch_width, height, width, -1)
                         # Assume 2*2 patches
                         # After this, [2,2, 24,24, 4096]
-                        if "maxpool" in mm_patch_merge_type:
-                            kernel_size = mm_patch_merge_type.split("maxpool")[-1].split("x")[-1]
-                            kernel_size = int(kernel_size)
-                            image_feature = image_feature.view(num_patch_height * num_patch_width, height, width, -1) # [4, 24, 24, 4096]
-                            image_feature = image_feature.permute(0, 3, 1, 2).contiguous() # [4, 4096, 24, 24]
-                            image_feature = nn.functional.max_pool2d(image_feature, kernel_size) # [4, 4096, 12, 12]
-                            image_feature = image_feature.flatten(2, 3) # [4, 4096, 144]
-                            image_feature = image_feature.permute(0, 2, 1).contiguous() # [4, 144, 4096]
-                            image_feature = image_feature.flatten(0, 1) # [576, 4096]
-                        elif "avgpool" in mm_patch_merge_type:
-                            kernel_size = mm_patch_merge_type.split("avgpool")[-1].split("x")[-1]
-                            kernel_size = int(kernel_size)
-                            image_feature = image_feature.view(num_patch_height * num_patch_width, height, width, -1) # [4, 24, 24, 4096]
-                            image_feature = image_feature.permute(0, 3, 1, 2).contiguous() # [4, 4096, 24, 24]
-                            image_feature = nn.functional.avg_pool2d(image_feature, kernel_size) # [4, 4096, 12, 12]
-                            image_feature = image_feature.flatten(2, 3) # [4, 4096, 144]
-                            image_feature = image_feature.permute(0, 2, 1).contiguous() # [4, 144, 4096]
-                            image_feature = image_feature.flatten(0, 1) # [576, 4096]
-                        else:
-                            raise ValueError("Blablabla, anyway not support")
+                        kernel_size = mm_patch_merge_type.split("avgpool")[-1].split("x")[-1]
+                        kernel_size = int(kernel_size)
+                        image_feature = image_feature.view(num_patch_height * num_patch_width, height, width, -1) # [4, 24, 24, 4096]
+                        image_feature = image_feature.permute(0, 3, 1, 2).contiguous() # [4, 4096, 24, 24]
+                        image_feature = nn.functional.avg_pool2d(image_feature, kernel_size) # [4, 4096, 12, 12]
+                        image_feature = image_feature.flatten(2, 3) # [4, 4096, 144]
+                        image_feature = image_feature.permute(0, 2, 1).contiguous() # [4, 144, 4096]
+                        image_feature = image_feature.flatten(0, 1) # [576, 4096]
                         # rank0_print(f"After pool : {image_feature.shape}")
                     else:
-                        # print(f"What the fuck why escape to here ? Image feat : {image_feature.shape}")
+                        # for text only data, there is a placeholder image feature that is actually never used. 
                         image_feature = image_feature[0]
-                        if "unpad" in mm_patch_merge_type:
-                            image_feature = torch.cat((image_feature, self.model.image_newline[None]), dim=0)
                         # rank0_print(f"After here : {image_feature.shape}")
                     new_image_features.append(image_feature)
-
                 image_features = new_image_features
-
-
             elif mm_patch_merge_type.startswith("spatial"):
                 new_image_features = []
                 for image_idx, image_feature in enumerate(image_features):
