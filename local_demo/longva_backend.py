@@ -559,6 +559,6 @@ def video_demo(model):
         print(e)
 
 if __name__ == "__main__":
-    model = LongVA(pretrained="LongVa/LLaVA-Qwen-extend-anyres7x7-avgpool2x2-dpo-ep3", model_name="llava_qwen")
+    model = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen")
     image_demo(model)
     video_demo(model)
