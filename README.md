@@ -71,11 +71,17 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
 ```bash
 sh text_extend/extend_qwen2.sh
 ```
+It takes around 2 days to train the model on 8 A100 GPUs.
+You can also download our long-context-pretrained model from huggingface:
+```bash
+huggingface-cli download lmms-lab/Qwen2-7B-Instrcuct-224K --local-dir text_extend/training_output/Qwen2-7B-Instrcuct-224K
+```
 You can evaluate the text-niah performance with this command:
 ```bash
-huggingface-cli download
-
+sh text_extend/eval.sh
 ```
+The results will be saved to text_extend/niah_output.
+
 ## Vision Text Alginment
 Coming soon...
 ## Citation

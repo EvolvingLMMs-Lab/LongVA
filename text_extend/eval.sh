@@ -1,4 +1,4 @@
-for model in lmms-lab/Qwen2-7B-Instrcuct-224K
+for model in Qwen2-7B-Instrcuct-224K
 do
 for num_distractor in 0 3 5
 do

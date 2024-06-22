@@ -4,7 +4,7 @@ text_extend/text_extend_train.py \
 --batch-size 1 \
 --gradient-accumulate-every 4 \
 --seed 2024 \
---output-dir text_extend/training_output/Qwen2-7B-Instruct-extend \
+--output-dir text_extend/training_output/Qwen2-7B-Instrcuct-224K\
 --wandb LMExtend \
 --max-train-steps 1000  \
 --learning-rate 1e-5  \
