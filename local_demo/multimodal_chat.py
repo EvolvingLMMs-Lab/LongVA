@@ -16,7 +16,7 @@ from constants import (
 dropdown, js = create_theme_dropdown()
 
 from longva_backend import LongVA
-longva = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen")
+longva = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen", device_map="auto", device="cuda")
 
 
 def generate_file_hash(file_path):
@@ -267,7 +267,19 @@ if __name__ == "__main__":
                             {
                                 "text": "What's the video about?",
                             },
-                        ]
+                        ],
+                        [
+                            f"{PARENT_FOLDER}/assets/water.mp4",
+                            {
+                                "text": "Why does thie main cook the ice cube?",
+                            },
+                        ],
+                        [
+                            f"{PARENT_FOLDER}/assets/jobs.mp4",
+                            {
+                                "text": "Please conclude this new product launch event.",
+                            },
+                        ],
                     ],
                     inputs=[video, chat_input],
                 )
