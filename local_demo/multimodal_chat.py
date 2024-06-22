@@ -77,6 +77,7 @@ def http_bot(
             print(f"Visual count: {visual_count}")
             visuals = state[last_visual_index][0]
             state = state[last_visual_index:]
+            prev_conv = []
             if visuals[0].split(".")[-1] in ["mp4", "mov", "avi", "mp3", "wav", "mpga", "mpg", "mpeg"]:
                 task_type = "video"
             else:
