@@ -98,6 +98,7 @@ Results will be saved to vision_niah/niah_output.
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` and longva, you can use the following script to evaluate on both image and video tasks
 <details>
     <summary>Image evaluation command</summary>
+
 ```bash
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
@@ -112,7 +113,8 @@ accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
 
 <details>
     <summary>Video evaluation command</summary>
-```
+
+```bash
 accelerate launch --num_processes 8 --main_process_port 12345 -m lmms_eval \
     --model longva \
     --model_args pretrained=lmms-lab/LongVA-7B,conv_template=qwen_1_5,video_decode_backend=decord,max_frames_num=32,model_name=llava_qwen \
