@@ -7,9 +7,9 @@
     🌐 <a href="XXX" target="_blank">Blog</a> | 📃 <a href="XXX" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/collections/lmms-lab/longva-667538e09329dbc7ea498057" target="_blank">Hugging Face</a> | 🎥 <a href="XXX" target="_blank">Demo</a>
 </p>
 
-Long context capability can *zero-shot transfer* from language to vision.
+Long context capability can **zero-shot transfer** from language to vision.
 
-LongVA can process up to 2000 frames or over 200K visual tokens. It achieves state-of-the-art performance on Video-MME among 7B models.
+LongVA can process **2000** frames or over **200K** visual tokens. It achieves state-of-the-art performance on Video-MME among 7B models.
 
 
 ## Installation 
@@ -30,17 +30,18 @@ pip install -r requirements.txt
 python local_demo/longva_backend.py
 
 # For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
-# make sure your gradio has been updated with new features, if not, please `pip install -U gradio`
 python local_demo/multimodal_chat.py
 ```
 
 ## V-NIAH Evaluation
+You need to first download a video longer than 1 hour (we sample frames at 1 fps) as the haystack video and put it at vision_niah/data/long_video.mp4. We do not provide the video because we use an actual movie in our evaluation. We can not provide it due to copyright reasons.
+The can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
 ```bash
 # Download the model weights
 huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
-Results will be saved to vision_niah/niah_output
+Results will be saved to vision_niah/niah_output.
 ## LMMs-Eval Evaluation
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` you can install longva using
 ```bash

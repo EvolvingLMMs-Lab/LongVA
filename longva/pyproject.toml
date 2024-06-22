@@ -28,7 +28,7 @@ train = [
     "longva[standalone]",
     "open_clip_torch",
     "fastapi",
-    "gradio==3.35.2",
+    "gradio==4.36.1",
     "markdown2[all]",
     "numpy",
     "requests",

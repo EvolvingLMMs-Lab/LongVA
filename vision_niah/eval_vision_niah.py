@@ -337,7 +337,7 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--model", type=str, default="output/LLaVA-NeXT-Video-7B-32K")
     args.add_argument("--max_frame_num", type=int, default=300)
-    args.add_argument("--needle_dataset", type=str, default="LongVa/longva_needles2")
+    args.add_argument("--needle_dataset", type=str, default="lmms-lab/v_niah_needles")
     args.add_argument("--min_frame_num", type=int, default=20)
     args.add_argument("--frame_interval", type=int, default=20)
     args.add_argument("--output_path", type=str, default="vision_niah/niah_output")

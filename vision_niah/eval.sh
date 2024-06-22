@@ -9,7 +9,7 @@ accelerate launch --num_processes 8 --config_file  easy_context/accelerate_confi
     --model  vision_niah/model_weights/$MODEL_NAME \
     --needle_embedding_dir vision_niah/data/needle_embeddings/$MODEL_NAME \
     --haystack_dir vision_niah/data/haystack_embeddings/$MODEL_NAME \
-    --needle_dataset LongVa/v_niah_needles \
+    --needle_dataset lmms-lab/v_niah_needles \
     --prompt_template qwen2 \
     --max_frame_num 3000 \
     --min_frame_num  200\
