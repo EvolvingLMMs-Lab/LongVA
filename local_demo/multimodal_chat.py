@@ -1,10 +1,12 @@
 import gradio as gr
 import os
 import json
-from datetime import datetime
+
 import hashlib
 import argparse
 from PIL import Image
+
+from loguru import logger
 
 from theme_dropdown import create_theme_dropdown  # noqa: F401
 from constants import (
@@ -28,7 +30,7 @@ def generate_file_hash(file_path):
 
 
 def print_like_dislike(x: gr.LikeData):
-    print(x.index, x.value, x.liked)
+    logger.info(x.index, x.value, x.liked)
 
 
 def add_message(history, message, video_input=None):
@@ -65,21 +67,29 @@ def http_bot(
                 conv_count += 1
                 prev_conv.append(x)
 
-        if visual_count == 1 and video_input is not None:
-            image_path = video_input
-            task_type = "video"
-        elif visual_count == 1 and video_input is None and type(state[0][0]) == tuple:
-            task_type = "image"
-        elif visual_count == 0:
-            image_path = ""
-            task_type = "text"
-        elif visual_count > 1:
-            print(f"Visual count: {visual_count}")
+        visuals = state[last_visual_index][0]
+        if visual_count > 1:
+            logger.info(f"Visual count: {visual_count}")
+            logger.info(f"Resetting state to {last_visual_index}")
             state = state[last_visual_index:]
-            if video_input is not None:
-                task_type = "video"
+            prev_conv = []
+
+        def get_task_type(visuals):
+            if visuals[0].split(".")[-1] in ["mp4", "mov", "avi", "mp3", "wav", "mpga", "mpg", "mpeg"]:
+                return "video"
+            elif visuals[0].split(".")[-1] in ["png", "jpg", "jpeg", "webp", "bmp", "gif"]:
+                return "image"
             else:
-                task_type = "image"
+                return "text"
+
+        if visual_count == 0:
+            image_path = ""
+            task_type = "text"                    
+        elif get_task_type(visuals) == "video":
+            image_path = visuals[0]
+            task_type = "video"
+        elif get_task_type(visuals) == "image":
+            task_type = "image"
 
         prompt = state[-1][0]
 
@@ -88,10 +98,10 @@ def http_bot(
             return state
 
         if task_type != "text":
-            print(f"Processing Visual: {image_path}")
-            print(f"Processing Question: {prompt}")
+            logger.info(f"Processing Visual: {image_path}")
+            logger.info(f"Processing Question: {prompt}")
         else:
-            print(f"Processing Question (text): {prompt}")
+            logger.info(f"Processing Question (text): {prompt}")
 
         try:
             gen_kwargs = {
@@ -173,8 +183,8 @@ if __name__ == "__main__":
 
     PARENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
     LOGDIR = f"{PARENT_FOLDER}/logs"
-    print(PARENT_FOLDER)
-    print(LOGDIR)
+    logger.info(PARENT_FOLDER)
+    logger.info(LOGDIR)
 
     chatbot = gr.Chatbot(
         [],
@@ -271,7 +281,7 @@ if __name__ == "__main__":
                         [
                             f"{PARENT_FOLDER}/assets/water.mp4",
                             {
-                                "text": "Why does thie main cook the ice cube?",
+                                "text": "Why does the man cook the ice cube in the video?",
                             },
                         ],
                         [
@@ -364,7 +374,13 @@ if __name__ == "__main__":
                 chatbot.like(print_like_dislike, None, None)
 
                 with gr.Row():
-                    gr.ClearButton(chatbot, chat_input, chat_msg, bot_msg)
+                    clear_btn = gr.ClearButton(chatbot, chat_input, chat_msg, bot_msg)
+                    clear_btn.click(
+                        lambda: gr.MultimodalTextbox(interactive=True), None, [chat_input]
+                    ).then(
+                        lambda: video, None, [video]
+                    )
+                    
                     submit_btn = gr.Button("Send", chat_msg)
                     submit_btn.click(
                         add_message, [chatbot, chat_input, video], [chatbot, chat_input]
