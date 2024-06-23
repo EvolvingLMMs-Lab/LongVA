@@ -1,3 +1,4 @@
+import argparse
 import copy
 import math
 import warnings
@@ -507,16 +508,15 @@ class LongVA:
         except Exception as e:
             raise e
 
-def image_demo(model):
+def image_demo(model, args):
 # Get the directory of the current script file
-    current_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Construct the path to the visual file relative to the current script file
-    visual_path = os.path.join(current_dir, "assets", "lmms-eval.png")
+    visual_path = args.image_path
     image = Image.open(visual_path).convert("RGB")
     
     input_visuals = [image]
-    input_context = "What is shown in this image?"
+    input_context = args.question
     task_type = "image"
     gen_kwargs = {"max_new_tokens": 1024, "temperature": 0, "do_sample": False}
     query = {
@@ -536,13 +536,12 @@ def image_demo(model):
     except Exception as e:
         print(e)
 
-def video_demo(model):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    visual_path = os.path.join(current_dir, "assets", "water.mp4")
+def video_demo(model, args):
+    visual_path = args.video_path
     input_visuals = [visual_path]
-    input_context = "What is shown in this video?"
+    input_context = args.question
     task_type = "video"
-    gen_kwargs = {"max_new_tokens": 1024, "temperature": 0, "do_sample": False, "sample_frames": 128}
+    gen_kwargs = {"max_new_tokens": 1024, "temperature": 0, "do_sample": False, "sample_frames": args.num_sampled_frames}
     query = {
         "visuals": input_visuals,
         "context": input_context,
@@ -561,6 +560,14 @@ def video_demo(model):
         print(e)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--video_path", type=str, default=None)
+    parser.add_argument("--image_path", type=str, default=None)
+    parser.add_argument("--num_sampled_frames", type=int, default=32)
+    parser.add_argument("--question", type=str, required=True)
+    args = parser.parse_args()
     model = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen")
-    image_demo(model)
-    video_demo(model)
+    if args.image_path:
+        image_demo(model, args)
+    if args.video_path:
+        video_demo(model, args)
