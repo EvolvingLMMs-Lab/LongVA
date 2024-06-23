@@ -18,7 +18,7 @@ from constants import (
 dropdown, js = create_theme_dropdown()
 
 from longva_backend import LongVA
-longva = LongVA(pretrained="lmms-lab/LongVA-7B", model_name="llava_qwen")
+longva = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen", device_map="auto", device="cuda")
 
 
 def generate_file_hash(file_path):
@@ -73,8 +73,7 @@ def http_bot(
             logger.info(f"Resetting state to {last_visual_index}")
             state = state[last_visual_index:]
             prev_conv = []
-
-        if last_visual_index != 0:
+        elif last_visual_index != 0:
             state = state[last_visual_index:]
             logger.info(f"Resetting state to {last_visual_index}")
 
@@ -112,7 +111,7 @@ def http_bot(
             gen_kwargs = {
                 "max_new_tokens": max_new_tokens,
                 "temperature": temperature,
-                "do_sample": False,
+                "do_sample": True,
                 "top_p": top_p,
             }
             state[-1][1] = ""
@@ -252,7 +251,7 @@ if __name__ == "__main__":
                     temperature = gr.Slider(
                         minimum=0.0,
                         maximum=1.0,
-                        value=0.5,
+                        value=0.7,
                         step=0.1,
                         interactive=True,
                         label="Temperature",
@@ -308,10 +307,16 @@ if __name__ == "__main__":
                         },
                         {
                             "files": [
-                                f"{PARENT_FOLDER}/assets/user_example_06.jpg",
+                                f"{PARENT_FOLDER}/assets/otter_books.jpg",
                             ],
-                            "text": "Write the content of this table in a Notion format?",
+                            "text": "Why these two animals are reading books?",
                         },
+                        # {
+                        #     "files": [
+                        #         f"{PARENT_FOLDER}/assets/user_example_06.jpg",
+                        #     ],
+                        #     "text": "Write the content of this table in a Notion format?",
+                        # },
                         # {
                         #     "files": [
                         #         f"{PARENT_FOLDER}/assets/user_example_10.png",
