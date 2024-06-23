@@ -97,7 +97,7 @@ You can view all needle questions at [lmms-lab/v_niah_needles](https://huggingfa
 huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
-Results will be saved to vision_niah/niah_output.
+Results will be saved to vision_niah/niah_output. We run on V-NIAH using PPL-based evaluation. If you want to use generation-based evaluation, check out a demo at vision_niah/eval_vision_niah_sampling.py. Please refer to Sectino 4 of our paper for more details.
 
 ## LMMs-Eval Evaluation
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` and longva, you can use the following script to evaluate on both image and video tasks
