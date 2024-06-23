@@ -57,7 +57,7 @@ def http_bot(
         visual_count = 0
         conv_count = 0
         prev_conv = []
-        last_visual_index = -1
+        last_visual_index = 0
         for idx, x in enumerate(state):
             if type(x[0]) == tuple:
                 visual_count += 1
@@ -74,10 +74,15 @@ def http_bot(
             state = state[last_visual_index:]
             prev_conv = []
 
+        if last_visual_index != 0:
+            state = state[last_visual_index:]
+            logger.info(f"Resetting state to {last_visual_index}")
+
         def get_task_type(visuals):
             if visuals[0].split(".")[-1] in ["mp4", "mov", "avi", "mp3", "wav", "mpga", "mpg", "mpeg"]:
                 return "video"
             elif visuals[0].split(".")[-1] in ["png", "jpg", "jpeg", "webp", "bmp", "gif"]:
+                video_input = None
                 return "image"
             else:
                 return "text"
@@ -378,7 +383,7 @@ if __name__ == "__main__":
                     clear_btn.click(
                         lambda: gr.MultimodalTextbox(interactive=True), None, [chat_input]
                     ).then(
-                        lambda: video, None, [video]
+                        lambda: gr.Video(value=None), None, [video]  # Set video to None
                     )
                     
                     submit_btn = gr.Button("Send", chat_msg)
@@ -401,7 +406,7 @@ if __name__ == "__main__":
                         None,
                         [chat_input],
                     ).then(
-                        lambda: video, None, [video]
+                        lambda: gr.Video(value=None), None, [video]  # Set video to None
                     )
 
         gr.Markdown(bibtext)
