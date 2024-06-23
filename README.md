@@ -9,11 +9,11 @@
 
 Long context capability can **zero-shot transfer** from language to vision.
 
-LongVA can process **2000** frames or over **200K** visual tokens. It achieves state-of-the-art performance on Video-MME among 7B models.
+LongVA can process **2000** frames or over **200K** visual tokens. It achieves **state-of-the-art** performance on Video-MME among 7B models.
 
 
 ## Installation 
-This codebase is tested on CUDA 11.8 and A100-SXM.
+This codebase is tested on CUDA 11.8 and A100-SXM-80G.
 ```bash
 conda create -n longva python=3.10 -y && conda activate longva
 pip install torch==2.1.2 torchvision --index-url https://download.pytorch.org/whl/cu118
@@ -30,6 +30,7 @@ pip install -r requirements.txt
 python local_demo/longva_backend.py
 
 # For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
+# pip install -U gradio
 python local_demo/multimodal_chat.py
 ```
 
@@ -56,7 +57,7 @@ max_frames_num = 16 # you can change this to several thousands so long you GPU m
 gen_kwargs = {"do_sample": True, "temperature": 0.5, "top_p": None, "num_beams": 1, "use_cache": True, "max_new_tokens": 1024}
 tokenizer, model, image_processor, _ = load_pretrained_model(model_path, None, "llava_qwen", device_map="cuda:0")
 
-image input
+#image input
 prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>\nDescribe the image in details.<|im_end|>\n<|im_start|>assistant\n"
 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(model.device)
 image = Image.open(image_path).convert("RGB")
