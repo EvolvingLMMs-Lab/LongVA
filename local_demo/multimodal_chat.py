@@ -57,7 +57,7 @@ def http_bot(
         visual_count = 0
         conv_count = 0
         prev_conv = []
-        last_visual_index = -1
+        last_visual_index = 0
         for idx, x in enumerate(state):
             if type(x[0]) == tuple:
                 visual_count += 1
@@ -73,11 +73,15 @@ def http_bot(
             logger.info(f"Resetting state to {last_visual_index}")
             state = state[last_visual_index:]
             prev_conv = []
+        elif last_visual_index != 0:
+            state = state[last_visual_index:]
+            logger.info(f"Resetting state to {last_visual_index}")
 
         def get_task_type(visuals):
             if visuals[0].split(".")[-1] in ["mp4", "mov", "avi", "mp3", "wav", "mpga", "mpg", "mpeg"]:
                 return "video"
             elif visuals[0].split(".")[-1] in ["png", "jpg", "jpeg", "webp", "bmp", "gif"]:
+                video_input = None
                 return "image"
             else:
                 return "text"
@@ -107,7 +111,7 @@ def http_bot(
             gen_kwargs = {
                 "max_new_tokens": max_new_tokens,
                 "temperature": temperature,
-                "do_sample": False,
+                "do_sample": True,
                 "top_p": top_p,
             }
             state[-1][1] = ""
@@ -247,7 +251,7 @@ if __name__ == "__main__":
                     temperature = gr.Slider(
                         minimum=0.0,
                         maximum=1.0,
-                        value=0.5,
+                        value=0.7,
                         step=0.1,
                         interactive=True,
                         label="Temperature",
@@ -303,10 +307,16 @@ if __name__ == "__main__":
                         },
                         {
                             "files": [
-                                f"{PARENT_FOLDER}/assets/user_example_06.jpg",
+                                f"{PARENT_FOLDER}/assets/otter_books.jpg",
                             ],
-                            "text": "Write the content of this table in a Notion format?",
+                            "text": "Why these two animals are reading books?",
                         },
+                        # {
+                        #     "files": [
+                        #         f"{PARENT_FOLDER}/assets/user_example_06.jpg",
+                        #     ],
+                        #     "text": "Write the content of this table in a Notion format?",
+                        # },
                         # {
                         #     "files": [
                         #         f"{PARENT_FOLDER}/assets/user_example_10.png",
@@ -378,7 +388,7 @@ if __name__ == "__main__":
                     clear_btn.click(
                         lambda: gr.MultimodalTextbox(interactive=True), None, [chat_input]
                     ).then(
-                        lambda: video, None, [video]
+                        lambda: gr.Video(value=None), None, [video]  # Set video to None
                     )
                     
                     submit_btn = gr.Button("Send", chat_msg)
@@ -401,7 +411,7 @@ if __name__ == "__main__":
                         None,
                         [chat_input],
                     ).then(
-                        lambda: video, None, [video]
+                        lambda: gr.Video(value=None), None, [video]  # Set video to None
                     )
 
         gr.Markdown(bibtext)

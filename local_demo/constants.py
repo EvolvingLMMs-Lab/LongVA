@@ -82,7 +82,7 @@ html_header = """
   </a>
   <div>
     <h2><a href="https://lmms-lab.github.io/posts/lmms-eval-0.2/">Long Context Transfer from Language to Vision</a></h2>
-    <h5><a href="https://github.com/LLaVA-VL/LLaVA-NeXT">Github</a> | <a href="https://huggingface.co/collections/lmms-lab/llava-next-6623288e2d61edba3ddbf5ff">Huggingface</a> | <a href="https://lmms-lab.github.io/posts/lmms-eval-0.2/">Blog</a> | <a href="https://lmms-lab.github.io/posts/lmms-eval-0.2/">ArXiv Paper</a></h5>
+    <h5><a href="https://github.com/EvolvingLMMs-Lab/LongVA">Github</a> | <a href="https://huggingface.co/collections/lmms-lab/longva-667538e09329dbc7ea498057">Huggingface</a> | <a href="https://lmms-lab.github.io/posts/longva/">Blog</a> | <a href="https://lmms-lab.github.io/posts/longva/">ArXiv Paper</a></h5>
     <h5>This is our research preview of LongVA, a multimodal model that is capable of accurately retrieving visual information from 2000 frames or more than 200K visual tokens.</h5>
   </div>
 </div>
