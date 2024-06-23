@@ -31,7 +31,7 @@ pip install gradio==4.29.0
 pip install httpx==0.23.3 # manual install httpx==0.23.3 other wise will cause gradio port error
 
 # For CLI inference, please refer to this video and image demo
-python local_demo/longva_backend.py --video_path local_demo/assets/dc_demo.mp4 --question "What does this video show?"
+python local_demo/longva_backend.py --video_path local_demo/assets/dc_demo.mp4 --question "What does this video show?" --num_sampled_frames 32
 python local_demo/longva_backend.py --image_path local_demo/assets/lmms-eval.png --question "What is inside the image?"
 
 # For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
