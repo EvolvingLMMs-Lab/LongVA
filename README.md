@@ -146,7 +146,7 @@ sh text_extend/eval.sh
 ```
 The results will be saved to text_extend/niah_output.
 
-## Vision Text Alginment
+## Vision Text Alignment
 Coming soon...
 ## Citation
 
