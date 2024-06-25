@@ -155,12 +155,12 @@ Coming soon...
 
 If you find this work useful, please consider citing our paper:
 ```
-@misc{zhang2024longva,
-    title={Long Context Transfer from Language to Vision},
-    url={https://lmms-lab.github.io/posts/longva/},
-    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Wang, Ziyue and Tan, Haoran and Li, Chunyuan and Liu, Ziwei},
-    month={June},
-    year={2024}
+@article{zhang2024longva,
+  title={Long Context Transfer from Language to Vision},
+  author={Peiyuan Zhang and Kaichen Zhang and Bo Li and Guangtao Zeng and Jingkang Yang and Yuanhan Zhang and Ziyue Wang and Haoran Tan and Chunyuan Li and Ziwei Liu},
+  journal={arXiv preprint arXiv:2406.16852},
+  year={2024},
+  url = {https://arxiv.org/abs/2406.16852}
 }
 ```
 
