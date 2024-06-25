@@ -69,7 +69,7 @@ input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_t
 image = Image.open(image_path).convert("RGB")
 images_tensor = process_images([image], image_processor, model.config).to(model.device, dtype=torch.float16)
 with torch.inference_mode():
-    output_ids = model.generate(input_ids, images=[images_tensor], image_sizes=[image.size], modalities=["image"], **gen_kwargs)
+    output_ids = model.generate(input_ids, images=images_tensor, image_sizes=[image.size], modalities=["image"], **gen_kwargs)
 outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 print(outputs)
 print("-"*50)
