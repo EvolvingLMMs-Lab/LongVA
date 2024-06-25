@@ -26,16 +26,11 @@ pip install -r requirements.txt
 ## Local Demo
 
 ```bash
-# Environment issue
-pip install gradio==4.29.0
-pip install httpx==0.23.3 # manual install httpx==0.23.3 other wise will cause gradio port error
-
-# For CLI inference, please refer to this video and image demo
-python local_demo/longva_backend.py --video_path local_demo/assets/dc_demo.mp4 --question "What does this video show?" --num_sampled_frames 32
+# For CLI inference
+python local_demo/longva_backend.py --video_path vision_niah/data/haystack_videos/movie.mp4 --question "What does this video show?" --num_sampled_frames 256 --device auto
 python local_demo/longva_backend.py --image_path local_demo/assets/lmms-eval.png --question "What is inside the image?"
 
-# For multimodal chat demo with gradio on your localhost, please refer to this multimodal chat demo
-# pip install -U gradio
+# For multimodal chat demo with gradio UI
 python local_demo/multimodal_chat.py
 ```
 
@@ -60,13 +55,15 @@ image_path = "local_demo/assets/lmms-eval.png"
 video_path = "local_demo/assets/dc_demo.mp4"
 max_frames_num = 16 # you can change this to several thousands so long you GPU memory can handle it :)
 gen_kwargs = {"do_sample": True, "temperature": 0.5, "top_p": None, "num_beams": 1, "use_cache": True, "max_new_tokens": 1024}
+# you can also set the device map to auto to accomodate more frames
 tokenizer, model, image_processor, _ = load_pretrained_model(model_path, None, "llava_qwen", device_map="cuda:0")
+
 
 #image input
 prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>\nDescribe the image in details.<|im_end|>\n<|im_start|>assistant\n"
 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(model.device)
 image = Image.open(image_path).convert("RGB")
-images_tensor = process_images([image], image_processor, model.config).to(model.device, dtype=torch.float16)
+images_tensor = process_images(image, image_processor, model.config).to(model.device, dtype=torch.float16)
 with torch.inference_mode():
     output_ids = model.generate(input_ids, images=[images_tensor], image_sizes=[image.size], modalities=["image"], **gen_kwargs)
 outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
