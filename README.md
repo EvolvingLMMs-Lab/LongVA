@@ -4,7 +4,8 @@
 </p>
 
 <p align="center">
-    🌐 <a href="XXX" target="_blank">Blog</a> | 📃 <a href="XXX" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/collections/lmms-lab/longva-667538e09329dbc7ea498057" target="_blank">Hugging Face</a> | 🎥 <a href="XXX" target="_blank">Demo</a>
+    🌐 <a href="https://lmms-lab.github.io/posts/longva/" target="_blank">Blog</a> | 📃 <a href="https://arxiv.org/abs/2406.16852" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/collections/lmms-lab/longva-667538e09329dbc7ea498057" target="_blank">Hugging Face</a> | 🎥 <a href="https://longva-demo.lmms-lab.com/" target="_blank">Demo</a>
+
 </p>
 
 Long context capability can **zero-shot transfer** from language to vision.
@@ -65,7 +66,7 @@ input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_t
 image = Image.open(image_path).convert("RGB")
 images_tensor = process_images(image, image_processor, model.config).to(model.device, dtype=torch.float16)
 with torch.inference_mode():
-    output_ids = model.generate(input_ids, images=[images_tensor], image_sizes=[image.size], modalities=["image"], **gen_kwargs)
+    output_ids = model.generate(input_ids, images=images_tensor, image_sizes=[image.size], modalities=["image"], **gen_kwargs)
 outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 print(outputs)
 print("-"*50)
@@ -151,12 +152,12 @@ Coming soon...
 
 If you find this work useful, please consider citing our paper:
 ```
-@misc{zhang2024longva,
-    title={Long Context Transfer from Language to Vision},
-    url={https://lmms-lab.github.io/posts/longva/},
-    author={Zhang, Peiyuan and Zhang, Kaichen and Li, Bo and Zeng, Guangtao and Yang, Jingkang and Zhang, Yuanhan and Wang, Ziyue and Tan, Haoran and Li, Chunyuan and Liu, Ziwei},
-    month={June},
-    year={2024}
+@article{zhang2024longva,
+  title={Long Context Transfer from Language to Vision},
+  author={Peiyuan Zhang and Kaichen Zhang and Bo Li and Guangtao Zeng and Jingkang Yang and Yuanhan Zhang and Ziyue Wang and Haoran Tan and Chunyuan Li and Ziwei Liu},
+  journal={arXiv preprint arXiv:2406.16852},
+  year={2024},
+  url = {https://arxiv.org/abs/2406.16852}
 }
 ```
 
