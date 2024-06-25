@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ```bash
 # For CLI inference
-python local_demo/longva_backend.py --video_path vision_niah/data/haystack_videos/movie.mp4 --question "What does this video show?" --num_sampled_frames 32 --device auto
+python local_demo/longva_backend.py --video_path local_demo/assets/dc_demo.mp4 --question "What does this video show?" --num_sampled_frames 32 --device auto
 python local_demo/longva_backend.py --image_path local_demo/assets/lmms-eval.png --question "What is inside the image?"
 
 # For multimodal chat demo with gradio UI
