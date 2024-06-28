@@ -56,7 +56,7 @@ image_path = "local_demo/assets/lmms-eval.png"
 video_path = "local_demo/assets/dc_demo.mp4"
 max_frames_num = 16 # you can change this to several thousands so long you GPU memory can handle it :)
 gen_kwargs = {"do_sample": True, "temperature": 0.5, "top_p": None, "num_beams": 1, "use_cache": True, "max_new_tokens": 1024}
-# you can also set the device map to auto to accomodate more frames
+# you can also set the device map to auto to accommodate more frames
 tokenizer, model, image_processor, _ = load_pretrained_model(model_path, None, "llava_qwen", device_map="cuda:0")
 
 
