@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ```bash
 # For CLI inference
-python local_demo/longva_backend.py --video_path vision_niah/data/haystack_videos/movie.mp4 --question "What does this video show?" --num_sampled_frames 256 --device auto
+python local_demo/longva_backend.py --video_path local_demo/assets/dc_demo.mp4 --question "What does this video show?" --num_sampled_frames 32 --device auto
 python local_demo/longva_backend.py --image_path local_demo/assets/lmms-eval.png --question "What is inside the image?"
 
 # For multimodal chat demo with gradio UI
@@ -96,7 +96,7 @@ You can view all needle questions at [lmms-lab/v_niah_needles](https://huggingfa
 huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
-Results will be saved to vision_niah/niah_output. We run on V-NIAH using PPL-based evaluation. If you want to use generation-based evaluation, check out a demo at vision_niah/eval_vision_niah_sampling.py. Please refer to Sectino 4 of our paper for more details.
+Results will be saved to vision_niah/niah_output. We run on V-NIAH using PPL-based evaluation. If you want to use generation-based evaluation, check out a demo at vision_niah/eval_vision_niah_sampling.py. Please refer to Section 4 of our paper for more details.
 
 ## LMMs-Eval Evaluation
 We provide both our video and image evaluation pipeline using [`lmms-eval`](https://github.com/EvolvingLMMs-Lab/lmms-eval). After installing `lmms-eval` and longva, you can use the following script to evaluate on both image and video tasks
@@ -146,7 +146,7 @@ sh text_extend/eval.sh
 ```
 The results will be saved to text_extend/niah_output.
 
-## Vision Text Alginment
+## Vision Text Alignment
 Coming soon...
 ## Citation
 
