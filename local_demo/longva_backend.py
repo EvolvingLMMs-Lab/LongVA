@@ -565,8 +565,9 @@ if __name__ == "__main__":
     parser.add_argument("--image_path", type=str, default=None)
     parser.add_argument("--num_sampled_frames", type=int, default=32)
     parser.add_argument("--question", type=str, required=True)
+    parser.add_argument("--device", type=str, default="cuda:0")
     args = parser.parse_args()
-    model = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen")
+    model = LongVA(pretrained="lmms-lab/LongVA-7B-DPO", model_name="llava_qwen", device_map=args.device)
     if args.image_path:
         image_demo(model, args)
     if args.video_path:
