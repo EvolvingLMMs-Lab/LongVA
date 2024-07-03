@@ -5,9 +5,10 @@ import json
 import hashlib
 import argparse
 from PIL import Image
-
+import io
 from loguru import logger
-
+import base64
+import requests
 from theme_dropdown import create_theme_dropdown  # noqa: F401
 from constants import (
     html_header,
@@ -44,7 +45,72 @@ def add_message(history, message, video_input=None):
         history.append((message["text"], None))
     return history, gr.MultimodalTextbox(value=None, interactive=False)
 
-
+def base64_api(input_json, input_text):
+    # input json style: gpt4 api compatible
+    # convert base 64 to PIL image
+    #     [
+    #     {
+    #     "role": "user",
+    #     "content": [
+    #         {
+    #         "type": "text",
+    #         "text": "What’s in this image?"
+    #         },
+    #         {
+    #         "type": "image_url",
+    #         "image_url": {
+    #             "url": f"data:image/jpeg;base64,{base64_image}"
+    #         }
+    #         }
+    #     ]
+    #     }
+    # ],
+    
+    
+    # check if image is in the input_json
+    image = None
+    for x in input_json:
+        if x["role"] == "user":
+            for y in x["content"]:
+                if y["type"] == "image_url":
+                    # two types of image_url: real url or base 64
+                    if y["image_url"]["url"].startswith("data:image"):
+                        base64_image = y["image_url"]["url"].split(",")[1]
+                        image = Image.open(io.BytesIO(base64.b64decode(base64_image))).convert("RGB")
+                    else:
+                        # download image from url
+                        image = Image.open(requests.get(y["image_url"]["url"], stream=True).raw).convert("RGB")
+                    break
+    # construct prev_conv
+    prev_conv = []
+    for i in range(0, len(input_json)-2, 2):
+        user = input_json[i]
+        assistant = input_json[i+1]
+        assert user["role"] == "user"
+        assert assistant["role"] == "assistant"
+        prev_conv.append([user["content"][0]["text"], assistant["content"][0]["text"]])
+    last_user_input = input_json[-1]["content"][0]["text"]
+    request = {
+        "prev_conv": prev_conv,
+        "visuals": [image],
+        "context": last_user_input,
+        "task_type": "image",
+    }
+    gen_kwargs = {
+        "max_new_tokens": 8192,
+        "temperature": 0.7,
+        "do_sample": True,
+        "top_p": 1.0,
+    }
+    # use stream generate until
+    print("calling base64_api")
+    for x in longva.stream_generate_until(request, gen_kwargs):
+        output = json.loads(x.decode("utf-8").strip("\0"))["text"].strip()
+    return output
+    
+    
+    
+    
 def http_bot(
     video_input,
     state,
@@ -141,7 +207,6 @@ def http_bot(
                     "context": prompt,
                     "task_type": task_type,
                 }
-
                 prev = 0
                 for x in longva.stream_generate_until(request, gen_kwargs):
                     output = json.loads(x.decode("utf-8").strip("\0"))["text"].strip()
@@ -356,6 +421,12 @@ if __name__ == "__main__":
                         ],
                         inputs=[chat_input],
                     )
+                with gr.Accordion("base 64 API", open=False) as parameter_row:
+                    input_json = gr.JSON(label="Input Json (OpenAI API compabible)")
+                    output_ = gr.Textbox(label="Output")
+                    bttn = gr.Button(value="Generate")
+                    bttn.click(base64_api, inputs= input_json, outputs=output_, api_name="json_api_request")
+                    
             with gr.Column(scale=9):
                 chatbot.render()
                 chat_input.render()
@@ -419,4 +490,4 @@ if __name__ == "__main__":
         gr.Markdown(learn_more_markdown)
 
     demo.queue(max_size=128)
-    demo.launch(max_threads=8, share=False, server_port=8000, favicon_path=f"{PARENT_FOLDER}/assets/favicon.ico")
+    demo.launch(max_threads=8, share=False, server_port=8000, show_error=True, favicon_path=f"{PARENT_FOLDER}/assets/favicon.ico")
