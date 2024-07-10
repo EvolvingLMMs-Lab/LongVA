@@ -65,7 +65,7 @@ tokenizer, model, image_processor, _ = load_pretrained_model(model_path, None, "
 prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>\nDescribe the image in details.<|im_end|>\n<|im_start|>assistant\n"
 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(model.device)
 image = Image.open(image_path).convert("RGB")
-images_tensor = process_images(image, image_processor, model.config).to(model.device, dtype=torch.float16)
+images_tensor = process_images([image], image_processor, model.config).to(model.device, dtype=torch.float16)
 with torch.inference_mode():
     output_ids = model.generate(input_ids, images=images_tensor, image_sizes=[image.size], modalities=["image"], **gen_kwargs)
 outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
