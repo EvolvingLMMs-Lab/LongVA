@@ -17,4 +17,3 @@ pandas
 pytest
 loguru
 gradio==4.29.0
-httpx==0.23.3
