@@ -269,13 +269,11 @@ class LlavaMetaForCausalLM(ABC):
                 raise ValueError(f"Unexpected mm_patch_merge_type: {self.config.mm_patch_merge_type}")
         else:
             error_message = """
-            Something is wrong with the input shape. Most likely, you did not wrap the image or video input in a list:
+            Something is wrong with the input shape. Most likely, you did not wrap the video input in a list:
             This is correct:
                 model.generate(input_ids, images=[video_tensor],  modalities=["video"], **gen_kwargs)
-                model.generate(input_ids, images=[image_tensor],  modalities=["image"], **gen_kwargs)
             This is wrong:
                 model.generate(input_ids, images=video_tensor,  modalities=["video"], **gen_kwargs)
-                model.generate(input_ids, images=image_tensor,  modalities=["image"], **gen_kwargs)
             """
             raise ValueError(error_message)
             # image_features = self.encode_images(images)
