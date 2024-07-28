@@ -8,8 +8,7 @@
 
 </p>
 
-![Static Badge](https://img.shields.io/badge/lmms--eval-certified-red?link=https%3A%2F%2Fgithub.com%2FEvolvingLMMs-Lab%2Flmms-eval)  ![Static Badge](https://img.shields.io/badge/llava--next-credit-red?link=https%3A%2F%2Fgithub.com%2FEvolvingLMMs-Lab%2Flmms-eval)
-
+![Static Badge](https://img.shields.io/badge/lmms--eval-certified-red?link=https%3A%2F%2Fgithub.com%2FEvolvingLMMs-Lab%2Flmms-eval)  ![Static Badge](https://img.shields.io/badge/llava--next-credit-red?link=https%3A%2F%2Fgithub.com%2FLLaVA-VL%2FLLaVA-NeXT)
 
 Long context capability can **zero-shot transfer** from language to vision.
 
