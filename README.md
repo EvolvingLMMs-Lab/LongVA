@@ -14,7 +14,12 @@ Long context capability can **zero-shot transfer** from language to vision.
 
 LongVA can process **2000** frames or over **200K** visual tokens. It achieves **state-of-the-art** performance on Video-MME among 7B models.
 
+## News
 
+
+- [2024/08/08] 🔥 Released training code for vision text alignment.
+- [2024/06/24] 🔥 LongVA is released. Training code for vision text alignment is coming soon.
+  
 ## Installation 
 This codebase is tested on CUDA 11.8 and A100-SXM-80G.
 ```bash
@@ -150,7 +155,7 @@ sh text_extend/eval.sh
 The results will be saved to text_extend/niah_output.
 
 ## Vision Text Alignment
-Coming soon...
+Please refer to [longva/scripts](https://github.com/EvolvingLMMs-Lab/LongVA/tree/main/longva/scripts).
 ## Citation
 
 If you find this work useful, please consider citing our paper:
