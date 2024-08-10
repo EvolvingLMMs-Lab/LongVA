@@ -155,7 +155,7 @@ sh text_extend/eval.sh
 The results will be saved to text_extend/niah_output.
 
 ## Vision Text Alignment
-Please refer to [longva/scripts](https://github.com/EvolvingLMMs-Lab/LongVA/tree/main/longva/scripts).
+Please refer to [LLaVA-NeXT data](https://huggingface.co/datasets/lmms-lab/LLaVA-NeXT-Data) for data preparation and [longva/scripts](https://github.com/EvolvingLMMs-Lab/LongVA/tree/main/longva/scripts) for training.
 ## Citation
 
 If you find this work useful, please consider citing our paper:
