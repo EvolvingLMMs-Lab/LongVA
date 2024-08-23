@@ -48,6 +48,7 @@ from transformers.utils import (
     replace_return_docstrings,
 )
 from transformers.models.qwen2.configuration_qwen2 import Qwen2Config
+from .low_mem_cross_ent import low_mem_cross_ent
 
 
 if is_flash_attn_2_available():
@@ -1087,21 +1088,29 @@ class Qwen2ForCausalLM_RingAttn(Qwen2PreTrainedModel):
         )
 
         hidden_states = outputs[0]
-        logits = self.lm_head(hidden_states)
-        logits = logits.float()
 
-        loss = None
+        loss, logits = None, None
         if labels is not None:
             # Shift so that tokens < n predict n
-            shift_logits = logits[..., :-1, :].contiguous()
-            shift_labels = labels[..., 1:].contiguous()
-            # Flatten the tokens
-            loss_fct = CrossEntropyLoss()
-            shift_logits = shift_logits.view(-1, self.config.vocab_size)
-            shift_labels = shift_labels.view(-1)
-            # Enable model parallelism
-            shift_labels = shift_labels.to(shift_logits.device)
-            loss = loss_fct(shift_logits, shift_labels)
+            # shift_labels = labels[:, 1:].to(hidden_states.device)
+            loss = low_mem_cross_ent(hidden_states, 
+                                     self.lm_head.weight, 
+                                     labels.to(hidden_states.device), 
+                                     16
+                                     )
+
+        # loss = None
+        # if labels is not None:
+        #     # Shift so that tokens < n predict n
+        #     shift_logits = logits[..., :-1, :].contiguous()
+        #     shift_labels = labels[..., 1:].contiguous()
+        #     # Flatten the tokens
+        #     loss_fct = CrossEntropyLoss()
+        #     shift_logits = shift_logits.view(-1, self.config.vocab_size)
+        #     shift_labels = shift_labels.view(-1)
+        #     # Enable model parallelism
+        #     shift_labels = shift_labels.to(shift_logits.device)
+        #     loss = loss_fct(shift_logits, shift_labels)
 
         if not return_dict:
             output = (logits,) + outputs[1:]
