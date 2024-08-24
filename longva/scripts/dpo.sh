@@ -15,7 +15,7 @@ PROMPT_VERSION="qwen_1_5"
 
 #torchrun --nproc_per_node="${ARNOLD_WORKER_GPU}" --nnodes="${ARNOLD_WORKER_NUM}" --node_rank="${ARNOLD_ID}" --master_addr="${METIS_WORKER_0_HOST}" --master_port="${port_in_cmd}" \
 ACCELERATE_CPU_AFFINITY=1 torchrun --nproc_per_node="${ARNOLD_WORKER_GPU}" --nnodes="${ARNOLD_WORKER_NUM}" --node_rank="${ARNOLD_ID}" --master_addr="${METIS_WORKER_0_HOST}" --master_port="${port_in_cmd}" \
-    llava/train/train_dpo.py \
+    longva/train/train_dpo.py \
     --deepspeed scripts/zero3.json \
     --model_name_or_path lmms-lab/LongVA-7B \
     --version $PROMPT_VERSION \

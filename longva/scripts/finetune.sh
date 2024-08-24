@@ -19,7 +19,7 @@ echo "BASE_RUN_NAME: ${BASE_RUN_NAME}"
 CKPT_PATH=$LLM_VERSION # this could also be the previous stage checkpoint
 
 ACCELERATE_CPU_AFFINITY=1 torchrun --nproc_per_node="${NUM_GPUS}" --nnodes="${NNODES}" --node_rank="${RANK}" --master_addr="${ADDR}" --master_port="${PORT}" \
-    llava/train/train_mem.py \
+    longva/train/train_mem.py \
     --deepspeed scripts/zero3.json \
     --model_name_or_path ${CKPT_PATH} \
     --version ${PROMPT_VERSION} \
