@@ -1429,7 +1429,7 @@ def get_model(model_args, training_args, bnb_model_from_pretrained_args):
                     **customized_kwargs,
                 )
 
-        elif "qwen" in model_args.model_name_or_path.lower() or "quyen" in model_args.model_name_or_path.lower():
+        elif "qwen" in model_args.model_name_or_path.lower() or "quyen" in model_args.model_name_or_path.lower() or "longva" in model_args.model_name_or_path.lower():
             if "moe" in model_args.model_name_or_path.lower():
                 model = LlavaQwenMoeForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
