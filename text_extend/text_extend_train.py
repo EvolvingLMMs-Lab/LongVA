@@ -26,7 +26,9 @@ from easy_context import (
     apply_unsloth_offloaded_gradient_checkpoint_monkey_patch
 )
 
-# apply_unsloth_offloaded_gradient_checkpoint_monkey_patch()
+os.environ["WANDB_DISABLED"] = "true"
+
+apply_unsloth_offloaded_gradient_checkpoint_monkey_patch()
 
 def main(args):
     if args.output_dir:
@@ -103,7 +105,7 @@ def main(args):
         total_num_steps=args.max_train_steps,
     )
     model, optim, scheduler = accelerator.prepare(model, optim, scheduler)
-    train_loader = prepare_dataloader(args.parallel_mode, train_loader, accelerator)
+    train_loader = prepare_dataloader(args.parallel_mode, train_loader, accelerator) # does not really prepare it
     model.gradient_checkpointing_enable()
 
     accelerator.register_for_checkpointing(scheduler)
@@ -158,13 +160,20 @@ def main(args):
 
         loss_log = None
         with accelerator.accumulate(model):
-            logits = model(
-                local_input_ids,
-                position_ids=local_position_ids,
-            ).logits
-            loss = loss_func(
-                logits.reshape(-1, logits.shape[-1]), local_target_ids.reshape(-1)
-            )
+            outputs = model(local_input_ids, 
+                            position_ids=local_position_ids, 
+                            labels=local_target_ids,
+                            return_dict=True,
+                            )
+            loss = outputs.loss
+
+            # logits = model(
+            #     local_input_ids,
+            #     position_ids=local_position_ids,
+            # ).logits
+            # loss = loss_func(
+            #     logits.reshape(-1, logits.shape[-1]), local_target_ids.reshape(-1)
+            # )
             accelerator.backward(loss)
 
             if accelerator.sync_gradients:
