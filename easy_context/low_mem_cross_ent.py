@@ -43,7 +43,7 @@ class LowMemLogitProjCrossEnt(torch.autograd.Function):
         loss = 0
         for i in range(sp): # shard data along the sequence dimension
             logits_i_slice = torch.einsum("bsh, vh -> bsv", x[:, micro_seqlen * i: micro_seqlen * (i + 1)], weight)
-            loss_i = F.cross_entropy(logits_i_slice.view(-1, vocab), labels[:, micro_seqlen * i: micro_seqlen * (i + 1)].view(-1))
+            loss_i = F.cross_entropy(logits_i_slice.reshape(-1, vocab), labels[:, micro_seqlen * i: micro_seqlen * (i + 1)].reshape(-1))
             loss = loss + loss_i
 
         loss = loss / sp
@@ -77,7 +77,7 @@ class LowMemLogitProjCrossEnt(torch.autograd.Function):
             # memory efficient in-place backprop
             # loss -> d_logits
             d_logits = -p.view(-1) # [b * l * v] 
-            labels_ = labels[:, micro_seqlen * i: micro_seqlen * (i + 1)].view(-1) # [b * l]
+            labels_ = labels[:, micro_seqlen * i: micro_seqlen * (i + 1)].reshape(-1) # [b * l]
             index = torch.arange(bsz * micro_seqlen, device=device) * vocab + labels_
             source = torch.tensor([1] * bsz * micro_seqlen, dtype=dtype, device=device)
             d_logits.index_add_(0, index, source)
