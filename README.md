@@ -97,11 +97,11 @@ print(outputs)
 
 
 ## V-NIAH Evaluation
-To begin, download a video longer than one hour to use as the haystack video and save it at vision_niah/data/long_video.mp4. We cannot provide the video ourselves as we use an actual movie in our evaluation.
+To begin, download a video longer than one hour to use as the haystack video and save it at vision_niah/data/haystack_videos/movie.mp4. We cannot provide the video ourselves as we use an actual movie in our evaluation.
 
 You can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
 ```bash
-huggingface-cli download lmms-lab/LLaVA-NeXT-Qwen2-7B-CLIP --local-dir vision_niah/model_weights/LLaVA-NeXT-Qwen2-extend
+huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
 sh vision_niah/eval.sh
 ```
 Results will be saved to vision_niah/niah_output. We run on V-NIAH using PPL-based evaluation. If you want to use generation-based evaluation, check out a demo at vision_niah/eval_vision_niah_sampling.py. Please refer to Section 4 of our paper for more details.
