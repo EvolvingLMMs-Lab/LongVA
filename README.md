@@ -26,7 +26,7 @@ This codebase is tested on CUDA 11.8 and A100-SXM-80G.
 conda create -n longva python=3.10 -y && conda activate longva
 pip install torch==2.1.2 torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install -e "longva/.[train]"
-pip install packaging &&  pip install ninja && pip install flash-attn --no-build-isolation --no-cache-dir
+pip install packaging &&  pip install ninja && pip install flash-attn==2.5.0 --no-build-isolation --no-cache-dir
 pip install -r requirements.txt
 ```
 
@@ -101,7 +101,7 @@ To begin, download a video longer than one hour to use as the haystack video and
 
 You can view all needle questions at [lmms-lab/v_niah_needles](https://huggingface.co/datasets/lmms-lab/v_niah_needles).
 ```bash
-huggingface-cli download lmms-lab/LongVA-7B --local-dir vision_niah/model_weights/LongVA-7B
+huggingface-cli download lmms-lab/LLaVA-NeXT-Qwen2-7B-CLIP --local-dir vision_niah/model_weights/LLaVA-NeXT-Qwen2-extend
 sh vision_niah/eval.sh
 ```
 Results will be saved to vision_niah/niah_output. We run on V-NIAH using PPL-based evaluation. If you want to use generation-based evaluation, check out a demo at vision_niah/eval_vision_niah_sampling.py. Please refer to Section 4 of our paper for more details.

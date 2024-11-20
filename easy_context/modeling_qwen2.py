@@ -1098,6 +1098,9 @@ class Qwen2ForCausalLM_RingAttn(Qwen2PreTrainedModel):
                                      labels.to(hidden_states.device), 
                                      16
                                      )
+        else:
+            logits = self.lm_head(hidden_states)
+            logits = logits.float()
 
         # loss = None
         # if labels is not None:

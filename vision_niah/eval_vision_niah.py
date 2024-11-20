@@ -26,7 +26,22 @@ from easy_context import (
 )
 apply_seq_parallel_monkey_patch("zigzag_ring_attn", "llama")
 
+import sys
+import pdb
 
+class ForkedPdb(pdb.Pdb):
+    """A Pdb subclass that may be used
+    from a forked multiprocessing child
+
+    """
+    def interaction(self, *args, **kwargs):
+        _stdin = sys.stdin
+        try:
+            sys.stdin = open('/dev/stdin')
+            pdb.Pdb.interaction(self, *args, **kwargs)
+        finally:
+            sys.stdin = _stdin
+            
 SEED = 24242424
 torch.manual_seed(SEED)
 random.seed(SEED)
@@ -93,6 +108,7 @@ def eval_forward(accelerator, model, input_embeds, answer_embeds, pad_id, answer
         accelerator.num_processes,
         accelerator.device,
     )
+    
     local_input_embeds = prepared["local_input_ids"]
     local_position_ids = prepared["local_position_ids"]
     with torch.inference_mode():
@@ -102,7 +118,6 @@ def eval_forward(accelerator, model, input_embeds, answer_embeds, pad_id, answer
             use_cache=False,
         ).logits
         pred = logits.argmax(dim=-1)
-
     # gather all logits using accelerator.gather
     def undo_extract_local(gathered_value, world_size, dim=1):
         value_chunks = gathered_value.chunk(2 * world_size, dim=dim)
